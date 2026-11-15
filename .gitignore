@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Environment / secrets
+.env
+*.local
+
+# Data and artifacts (regenerable; committed only where explicitly needed)
+ml/data/raw/
+ml/data/processed/
+ml/artifacts/
+*.sqlite3
+*.db
+backend/uploads/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+*.log
+
+# OS
+Thumbs.db
+.DS_Store

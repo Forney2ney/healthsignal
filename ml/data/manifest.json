@@ -1,0 +1,42 @@
+{
+  "heart": {
+    "name": "UCI Heart Disease (Cleveland, processed)",
+    "rows": 303,
+    "columns": 13,
+    "missing_values_total": 6,
+    "positive_rate": 0.4587,
+    "verified_utc": "2026-11-15T14:32:20+00:00"
+  },
+  "wdbc": {
+    "name": "UCI Breast Cancer Wisconsin (Diagnostic)",
+    "rows": 569,
+    "columns": 30,
+    "missing_values_total": 0,
+    "positive_rate": 0.3726,
+    "verified_utc": "2026-11-15T14:32:20+00:00"
+  },
+  "ckd": {
+    "name": "UCI Chronic Kidney Disease",
+    "rows": 399,
+    "columns": 24,
+    "missing_values_total": 1012,
+    "positive_rate": 0.6266,
+    "verified_utc": "2026-11-15T14:32:20+00:00"
+  },
+  "pima": {
+    "name": "Pima Indians Diabetes (original NIDDK data, public mirror)",
+    "rows": 768,
+    "columns": 8,
+    "missing_values_total": 652,
+    "positive_rate": 0.349,
+    "verified_utc": "2026-11-15T14:32:20+00:00"
+  },
+  "ilpd": {
+    "name": "UCI Indian Liver Patient Records (ILPD)",
+    "rows": 583,
+    "columns": 10,
+    "missing_values_total": 4,
+    "positive_rate": 0.7136,
+    "verified_utc": "2026-11-15T14:32:20+00:00"
+  }
+}
