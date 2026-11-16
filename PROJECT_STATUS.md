@@ -92,3 +92,12 @@ was verified in a temporary directory using the project `.venv` and Node 24:
 
 Training is therefore NOT required to run the demo from a clean clone; `download_data.py` / `train_all.py`
 remain available for reproduction.
+
+## Publication (2026-11-16)
+
+- Public repository: https://github.com/Forney2ney/healthsignal — visibility confirmed as PUBLIC via `gh repo view`.
+- Public accessibility confirmed with an unauthenticated HTTP fetch of the repository page; the README
+  renders correctly (UTF-8, no mojibake) and all required files are present.
+- No `.env`, credentials or private keys are tracked.
+- Remaining before submission: fill in team names, emails and schools in `docs/ONEPAGE_SUBMIT.md`
+  (placeholder deliberately left by the project owner), then submit the write-up link and repo link.
