@@ -55,7 +55,7 @@ Most student health projects demo one model with one accuracy number. Our contri
   compared by 5-fold stratified CV **on the training split only**; logistic regression won all five CV
   competitions. Deterministic seed 42; runtime ~2 minutes on CPU.
 - **Stack:** Python/FastAPI backend with JWT + bcrypt auth and role-based access; React + TypeScript +
-  Tailwind frontend; SQLite; pytest suite (30 tests).
+  Tailwind frontend; SQLite; pytest suite (29 tests, all passing on a clean clone).
 
 ## Results (held-out 30% test split, seed 42)
 
