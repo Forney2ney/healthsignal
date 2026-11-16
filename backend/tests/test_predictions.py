@@ -30,6 +30,12 @@ def test_prediction_runs_and_reports_imputed_features(client, patient_token):
     assert body["explanation"] is not None and body["explanation"]["top_features"]
     assert body["safe_harbour"]
 
+    # Regression: the cohort prevalence in the interpretation must come from
+    # the model card's class_balance (top level), not silently default to 0%.
+    card = json.loads((ML_ARTIFACTS / "heart" / "model_card.json").read_text(encoding="utf-8"))
+    expected_prev = card["class_balance"]["positive_rate_test"]
+    assert f"{expected_prev:.1%}" in body["probability_interpretation"]
+
 
 def test_out_of_range_feature_rejected(client, patient_token):
     r = client.post(

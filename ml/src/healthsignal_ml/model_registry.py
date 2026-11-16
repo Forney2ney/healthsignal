@@ -204,9 +204,15 @@ def predict(key: str, values: dict[str, Any]) -> dict:
         explanation = None
         print(f"[explain] {key} explanation failed: {exc}")
 
-    card_m = handle.card.get("methodology", {})
+    card = handle.card
+    card_m = card.get("methodology", {})
     metrics = card_m.get("held_out_test_metrics") or card_m.get("final_metrics_on_held_out_test", {})
-    test_prevalence = card_m.get("class_balance", {}).get("positive_rate_test", 0.0)
+    # Regenerated cards (run_full_evaluation.py) store class_balance at the top
+    # level; older cards stored prevalence inside the metrics block. Support both.
+    balance = card.get("class_balance") or card_m.get("class_balance") or {}
+    test_prevalence = balance.get(
+        "positive_rate_test", metrics.get("positive_class_prevalence_test", 0.0)
+    )
     n_test = metrics.get("n_test") or metrics.get("n")
     return {
         "model_key": key,
