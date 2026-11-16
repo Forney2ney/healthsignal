@@ -103,18 +103,20 @@ Manual walkthrough in headless Chrome (CDP), against the live backend and seeded
   This SPA does not use SSR hydration; fixing requires a breaking major upgrade to v7, deferred past the
   submission deadline and documented rather than hidden.
 
-## Clean-clone verification (2026-11-16, commit `896fc14`)
+## Clean-clone verification (2026-11-16, final head `1fecbc5`)
 
-A fresh `git clone --depth 1` of the public repository (tracked files only, including the committed model
-pipelines, model cards, sample cases and the 28.4 MB pretrained X-ray weights) was verified in a temporary
-directory using the project `.venv` and Node 24:
+A fresh `git clone --depth 1` of the public repository at the final pushed head (tracked files only, including
+the committed model pipelines, model cards, sample cases and the 28.4 MB pretrained X-ray weights) was verified
+in a temporary directory using the project `.venv` and Node 24:
 
-- `pytest tests -q` from `backend/`: **31 passed** (25.19 s), exit 0.
-- `npm ci` then `npm run build` from `frontend/`: exit 0, build 7.93 s; `dist/sample_cases.json` present.
-- `seed_demo.py` created the four demo users and the labelled SYNTHETIC profile using the committed models.
-- Backend on a fresh SQLite file: `/api/health`, login, `/api/models` (5 tabular models; heart baseline
-  0.4779, FP 5 / FN 7, subgroups male+female), a real heart prediction (0.9951) and the clinician report
-  markdown all succeeded; the built bundle contains the required disclaimer sentence.
+- `pytest tests -q` from `backend/`: **31 passed** (24.28 s), exit 0.
+- `npm ci` then `npm run build` from `frontend/`: exit 0, build 9.18 s; `dist/sample_cases.json` present.
+
+An earlier end-to-end smoke at `896fc14` (unchanged by the later liveness/documentation commits) additionally
+confirmed: `seed_demo.py` created the four demo users and the labelled SYNTHETIC profile; the backend returned
+`/api/health`, login, `/api/models` (5 tabular models; heart baseline 0.4779, FP 5 / FN 7, subgroups
+male+female), a real heart prediction (0.9951) and the clinician report markdown; the built bundle contains
+the required disclaimer sentence.
 
 Training is therefore NOT required to run the demo from a clean clone; `download_data.py` / `train_all.py`
 remain available for reproduction (measured 52.2 s).
@@ -122,11 +124,10 @@ remain available for reproduction (measured 52.2 s).
 ## Publication (2026-11-16)
 
 - Public repository: https://github.com/Forney2ney/healthsignal — visibility confirmed as PUBLIC via `gh repo view`.
-- Clean-clone verification performed at `896fc14` (evaluation commit `6c97337`); the latest pushed commit
-  `342d24d` adds documentation and a Grad-CAM label-order fix, and the frontend build was re-run after it
-  (7.45 s).
-- Public accessibility confirmed with an unauthenticated HTTP fetch of the repository page; the README
-  renders correctly (UTF-8, no mojibake) and all required files are present.
+- Clean-clone verification performed at the final head `1fecbc5` (31 tests, `npm ci` + build).
+- Public accessibility confirmed with an unauthenticated HTTP fetch: the repository page returns 200, the raw
+  `docs/ONEPAGE_SUBMIT.md` returns 200 with the team names and the exact disclaimer sentence, and the README
+  renders correctly (UTF-8, no mojibake).
 - No `.env`, credentials or private keys are tracked.
 - Remaining before submission: none inside the repository — team names are filled in
   `docs/ONEPAGE_SUBMIT.md`. If the submission portal also asks for emails or schools, enter them there;
