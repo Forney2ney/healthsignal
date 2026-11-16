@@ -103,7 +103,7 @@ Manual walkthrough in headless Chrome (CDP), against the live backend and seeded
   This SPA does not use SSR hydration; fixing requires a breaking major upgrade to v7, deferred past the
   submission deadline and documented rather than hidden.
 
-## Clean-clone verification (2026-11-16, final head `1fecbc5`)
+## Clean-clone verification (2026-11-16, commit `1fecbc5`)
 
 A fresh `git clone --depth 1` of the public repository at the final pushed head (tracked files only, including
 the committed model pipelines, model cards, sample cases and the 28.4 MB pretrained X-ray weights) was verified
@@ -123,8 +123,11 @@ remain available for reproduction (measured 52.2 s).
 
 ## Publication (2026-11-16)
 
-- Public repository: https://github.com/Forney2ney/healthsignal — visibility confirmed as PUBLIC via `gh repo view`.
-- Clean-clone verification performed at the final head `1fecbc5` (31 tests, `npm ci` + build).
+- Public repository: https://github.com/Forney2ney/healthsignal — visibility confirmed by an unauthenticated
+  clone and HTTP fetch.
+- Clean-clone verification performed at `1fecbc5` (31 tests, `npm ci` + build). Later commits only add a
+  configurable Vite API target and a one-click dev script; the frontend build was re-run successfully and the
+  script was exercised on alternate ports (8001/5174).
 - Public accessibility confirmed with an unauthenticated HTTP fetch: the repository page returns 200, the raw
   `docs/ONEPAGE_SUBMIT.md` returns 200 with the team names and the exact disclaimer sentence, and the README
   renders correctly (UTF-8, no mojibake).
