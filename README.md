@@ -96,6 +96,10 @@ The frontend needs its own packages once: `cd frontend; npm install`.
 
 ## Run the application
 
+After the one-time setup below, `.\run_app.ps1` starts both servers in separate windows, sets the matching
+CORS origin and API proxy target, and prints the URLs. Ports are configurable:
+`.\run_app.ps1 -BackendPort 8001 -FrontendPort 5174`. To run the servers manually instead:
+
 ```powershell
 # terminal 1 — backend (serving the API at :8000)
 cd backend
