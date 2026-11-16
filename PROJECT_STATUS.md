@@ -119,7 +119,9 @@ remain available for reproduction (measured 52.2 s).
 ## Publication (2026-11-16)
 
 - Public repository: https://github.com/Forney2ney/healthsignal — visibility confirmed as PUBLIC via `gh repo view`.
-- Latest verified pushed code commit: `896fc14` (evaluation commit `6c97337`).
+- Clean-clone verification performed at `896fc14` (evaluation commit `6c97337`); the latest pushed commit
+  `342d24d` adds documentation and a Grad-CAM label-order fix, and the frontend build was re-run after it
+  (7.45 s).
 - Public accessibility confirmed with an unauthenticated HTTP fetch of the repository page; the README
   renders correctly (UTF-8, no mojibake) and all required files are present.
 - No `.env`, credentials or private keys are tracked.
