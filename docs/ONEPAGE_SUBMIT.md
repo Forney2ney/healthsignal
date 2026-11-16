@@ -2,7 +2,7 @@
 
 **Project name:** HealthSignal
 **Track:** Health
-**Team members:** _(fill in names before submission)_
+**Team members:** Elyaseen Al Forqani - Nasser Al Habsi
 
 ## The problem
 
