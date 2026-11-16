@@ -508,8 +508,8 @@ honesty; chest X-rays run a genuine pretrained model with Grad-CAM.
   possible reasons. Implemented: `methodology.failure_cases` in each model card.
 - Consider performance across relevant demographic groups where the dataset
   supports it. Implemented: `methodology.subgroup_performance` (age band for
-  Pima / CKD, sex for ILPD; heart and WDBC have no usable demographic attribute
-  in their processed features), with an explicit "not a fairness claim" note.
+  Pima / CKD, recorded sex for heart / ILPD; WDBC has no usable demographic
+  attribute in its processed features), with an explicit "not a fairness claim" note.
 - Document dataset limitations, class imbalance and generalisability concerns.
 
 ### 16.3 Distinctiveness

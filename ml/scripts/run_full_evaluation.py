@@ -12,6 +12,7 @@ Produces, for every dataset, a single evaluation record containing:
 
 Deterministic: seed 42. Writes ml/artifacts/<key>/model_card.json.
 """
+import joblib
 import json
 import platform
 import sys
@@ -40,7 +41,7 @@ SEED = 42
 ARTIFACTS = Path(__file__).resolve().parents[1] / "artifacts"
 
 SUBGROUPS = {
-    "heart": {"column": "sex", "groups": {"male (source: 1)": "1", "female (source: 0)": "0"}},
+    "heart": {"column": "sex", "groups": {"male": "1", "female": "0"}},
     "ilpd": {"column": "gender", "groups": {"male": "Male", "female": "Female"}},
     "pima": {"column": "age", "groups": {"age<40": (0, 40), "age>=40": (40, 130)}},
     "ckd": {"column": "age", "groups": {"age<55": (0, 55), "age>=55": (55, 130)}},
@@ -159,7 +160,15 @@ def evaluate(key):
                 numeric = pd.to_numeric(col, errors="coerce")
                 mask = ((numeric >= rule[0]) & (numeric < rule[1])).to_numpy()
             else:
-                mask = (col.astype(str) == rule).to_numpy()
+                # Numeric group keys (e.g. heart `sex` = 1/0) must be compared
+                # numerically: pandas stores them as floats (1.0), so a plain
+                # string comparison against "1" silently matched nothing.
+                try:
+                    target_value = float(rule)
+                except (TypeError, ValueError):
+                    mask = (col.astype(str) == rule).to_numpy()
+                else:
+                    mask = (pd.to_numeric(col, errors="coerce") == target_value).to_numpy()
             if mask.sum() == 0 or len(set(y_test[mask].tolist())) < 2:
                 continue
             proba_g, y_g = proba[mask], y_test[mask]
@@ -176,6 +185,19 @@ def evaluate(key):
                 "Small subgroup sizes mean wide uncertainty; these figures are reported for "
                 "transparency and MUST NOT be used to claim the model is fair.")
 
+    feature_names = list(best_pipe.named_steps["preprocess"].get_feature_names_out())
+    X_train_t = best_pipe.named_steps["preprocess"].transform(X_train)
+    try:
+        feature_means = [float(v) for v in np.asarray(X_train_t.mean(axis=0)).ravel()]
+    except Exception:
+        feature_means = [0.0] * len(feature_names)
+
+    # For linear models the exact per-feature attribution is
+    # coef_j * (x_j - train_mean_j) (same formula used at serve time).
+    linear_model = best_pipe.named_steps["model"]
+    coefficients = (np.asarray(linear_model.coef_).ravel()
+                    if hasattr(linear_model, "coef_") else None)
+
     test_rows = X_test.reset_index(drop=True)
     failures = {"false_negatives": [], "false_positives": []}
     for i in range(len(y_test)):
@@ -187,22 +209,32 @@ def evaluate(key):
         if bucket is None:
             continue
         row = test_rows.iloc[i]
-        failures[bucket].append({
+        record = {
             "model_probability": round(float(proba[i]), 4),
             "true_label": int(y_test[i]),
             "features": {c: (None if pd.isna(row[c]) else
                              (row[c].item() if hasattr(row[c], "item") else row[c]))
                          for c in X.columns},
-        })
-    failures["_note"] = ("Held-out test records the selected model got wrong, with the raw "
-                         "dataset feature values (null = genuinely missing in the source).")
-
-    feature_names = list(best_pipe.named_steps["preprocess"].get_feature_names_out())
-    X_train_t = best_pipe.named_steps["preprocess"].transform(X_train)
-    try:
-        feature_means = [float(v) for v in np.asarray(X_train_t.mean(axis=0)).ravel()]
-    except Exception:
-        feature_means = [0.0] * len(feature_names)
+        }
+        if coefficients is not None:
+            row_t = best_pipe.named_steps["preprocess"].transform(test_rows.iloc[[i]])
+            contributions = coefficients * (np.asarray(row_t).ravel() - np.asarray(feature_means))
+            order = np.argsort(-np.abs(contributions))[:5]
+            record["top_contributions"] = [
+                {"feature": feature_names[j], "contribution": round(float(contributions[j]), 4)}
+                for j in order
+            ]
+            mass = float(np.abs(contributions).sum())
+            if mass > 0:
+                record["top5_share_of_absolute_contribution"] = round(
+                    float(np.abs(contributions[order]).sum() / mass), 4)
+        failures[bucket].append(record)
+    failures["_note"] = (
+        "Held-out test records the selected model got wrong, with the raw dataset feature "
+        "values (null = genuinely missing in the source). `top_contributions` are exact linear "
+        "SHAP values (coefficient x deviation from the train-split mean, in transformed feature "
+        "space); a positive value pushes the model toward the positive class. They describe model "
+        "behaviour, not causal effects.")
 
     card = {
         "model_name": f"healthsignal-{key}-v1",
@@ -257,25 +289,37 @@ def evaluate(key):
             "non-trivial scores, so ROC-AUC must be read against it.",
         ],
     }
+    out_dir = ARTIFACTS / key
+    out_dir.mkdir(parents=True, exist_ok=True)
+    joblib.dump(best_pipe, out_dir / "model.joblib")
     return card, main, selection, best, baselines
 
 
-if __name__ == "__main__":
-    only = sys.argv[1:] or list(DATASETS)
+def run(keys=None):
+    """Train, save and write an enriched card for each requested dataset."""
+    keys = list(keys) if keys else list(DATASETS)
     summary = {}
-    for key in only:
+    for key in keys:
         card, main, selection, best, baselines = evaluate(key)
         out = ARTIFACTS / key
         out.mkdir(parents=True, exist_ok=True)
         (out / "model_card.json").write_text(json.dumps(card, indent=2), encoding="utf-8")
         base_roc = baselines["baseline_stratified_random"]["roc_auc"]
+        subgroup_names = sorted(k for k in card["methodology"]["subgroup_performance"]
+                                if not k.startswith("_"))
         print(f"[{key}] {best} test ROC-AUC {main['roc_auc']:.4f} "
               f"(baseline {base_roc:.4f}) PR-AUC {main['pr_auc']:.4f} "
-              f"FP {main['false_positives']} FN {main['false_negatives']}")
+              f"FP {main['false_positives']} FN {main['false_negatives']} "
+              f"subgroups={subgroup_names or 'none'}")
         summary[key] = {"model": best, "roc_auc": main["roc_auc"], "pr_auc": main["pr_auc"],
                         "f1": main["f1"], "recall": main["recall_sensitivity"],
                         "specificity": main["specificity"], "fp": main["false_positives"],
-                        "fn": main["false_negatives"],
-                        "baseline_roc_auc": base_roc, "n_test": main["n"]}
+                        "fn": main["false_negatives"], "baseline_roc_auc": base_roc,
+                        "n_test": main["n"], "subgroups": subgroup_names}
     (ARTIFACTS / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print("summary ->", ARTIFACTS / "summary.json")
+    return summary
+
+
+if __name__ == "__main__":
+    run(sys.argv[1:] or None)

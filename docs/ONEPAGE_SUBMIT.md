@@ -53,7 +53,8 @@ Most student health projects demo one model with one accuracy number. Our contri
   one-hot encoding for categorical columns, all inside sklearn Pipelines refitted inside every CV fold.
 - **Model:** 4 candidates (logistic regression, random forest, histogram gradient boosting, LightGBM)
   compared by 5-fold stratified CV **on the training split only**; logistic regression won all five CV
-  competitions. Deterministic seed 42; runtime ~2 minutes on CPU.
+  competitions. Deterministic seed 42; `train_all.py` (retrain + full evaluation of all five models +
+  image-model cards) took **52 s** on the CPU used for this submission.
 - **Stack:** Python/FastAPI backend with JWT + bcrypt auth and role-based access; React + TypeScript +
   Tailwind frontend; SQLite; pytest suite (29 tests, all passing on a clean clone).
 
@@ -93,13 +94,19 @@ Failure cases are stored in `ml/artifacts/<task>/model_card.json` under
   one label with modest signal; the model over-flags. With 71% positive prevalence the always-positive
   baseline reaches recall 1.0 with zero false negatives — our model trades FP for less-obvious FN, which is
   why we report FP and FN separately rather than a single accuracy.
-- **Heart, 7 false negatives:** exercise-test features (ST depression, thalassmia category) are the dominant
-  contributors; atypical presentations without ST deviation fall below the 0.5 threshold. Threshold choice is
-  disclosed rather than tuned on the test split.
-- **Subgroup caveat:** subgroups are reported where the processed data carries a demographic attribute —
-  age bands for Pima/CKD and recorded sex for ILPD. Heart and WDBC have no usable demographic subgroup in
-  their processed features, so none is reported. Subgroup n ranges from 42 to 176, so these figures are
-  presented for transparency only and must not be read as fairness claims.
+- **Heart, 7 false negatives / 5 false positives:** errors concentrate on two sparse source fields, `ca`
+  (major vessels visible on fluoroscopy) and `thal` (defect category). In the strongest false positive
+  (true label 0, p=0.956) `ca=3` contributes +2.72 and `thal=7` +0.77; in a false negative with `ca=0`,
+  the same feature contributes −0.73 and `thal=3` −0.55, holding the score at 0.205. The top five features
+  account for 54–76% of total absolute attribution, so this is a concentrated dependency, not diffuse noise.
+  A second pattern is the missed 58-year-old woman with cholesterol 319 mg/dl (p=0.187), where `sex=female`
+  contributes −0.75. These are descriptions of model behaviour, not causal claims; the 0.5 threshold is
+  fixed and was never tuned on the test split.
+- **Subgroup caveat:** subgroups are reported only where the processed data carries a demographic column —
+  recorded sex for heart (male n=60, recall 0.871; female n=31, recall 0.727) and ILPD (male n=133, female
+  n=42), and age bands for Pima and CKD. WDBC has no demographic attribute. The heart female subgroup has
+  only 11 positive cases and the smallest subgroup is n=31, so these figures are presented for transparency
+  and must not be read as fairness claims.
 
 ## What we would do next
 

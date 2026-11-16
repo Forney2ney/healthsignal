@@ -1,7 +1,7 @@
 {
   "model_name": "healthsignal-pima-v1",
   "model_type": "sklearn Pipeline[logistic_regression]",
-  "created_utc": "2026-11-16T11:30:54+00:00",
+  "created_utc": "2026-11-16T16:36:03+00:00",
   "prediction_task": "Screening classifier for type-2 diabetes test outcome from 8 measurements",
   "dataset": {
     "name": "Pima Indians Diabetes (original NIDDK data, public mirror)",
@@ -154,7 +154,30 @@
             "bmi": 28.4,
             "pedigree": 0.323,
             "age": 34.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__bmi",
+              "contribution": -0.4606
+            },
+            {
+              "feature": "num__glucose",
+              "contribution": 0.3179
+            },
+            {
+              "feature": "num__pregnancies",
+              "contribution": -0.1216
+            },
+            {
+              "feature": "num__pedigree",
+              "contribution": -0.1013
+            },
+            {
+              "feature": "num__skinfold",
+              "contribution": 0.0655
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.9563
         },
         {
           "model_probability": 0.2703,
@@ -168,7 +191,30 @@
             "bmi": 34.8,
             "pedigree": 0.905,
             "age": 26.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__glucose",
+              "contribution": -0.4734
+            },
+            {
+              "feature": "num__pedigree",
+              "contribution": 0.2731
+            },
+            {
+              "feature": "num__bmi",
+              "contribution": 0.2384
+            },
+            {
+              "feature": "num__skinfold",
+              "contribution": -0.1682
+            },
+            {
+              "feature": "num__age",
+              "contribution": -0.0648
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.9523
         },
         {
           "model_probability": 0.4804,
@@ -182,7 +228,30 @@
             "bmi": 43.2,
             "pedigree": 0.27,
             "age": 26.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__bmi",
+              "contribution": 1.1559
+            },
+            {
+              "feature": "num__pregnancies",
+              "contribution": -0.5351
+            },
+            {
+              "feature": "num__glucose",
+              "contribution": 0.3555
+            },
+            {
+              "feature": "num__pedigree",
+              "contribution": -0.1354
+            },
+            {
+              "feature": "num__age",
+              "contribution": -0.0648
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.9967
         },
         {
           "model_probability": 0.2604,
@@ -196,7 +265,30 @@
             "bmi": 31.6,
             "pedigree": 0.743,
             "age": 32.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__pregnancies",
+              "contribution": -0.5351
+            },
+            {
+              "feature": "num__glucose",
+              "contribution": 0.3555
+            },
+            {
+              "feature": "num__pedigree",
+              "contribution": 0.1689
+            },
+            {
+              "feature": "num__bmi",
+              "contribution": -0.1111
+            },
+            {
+              "feature": "num__bloodpressure",
+              "contribution": -0.0539
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.984
         },
         {
           "model_probability": 0.3204,
@@ -210,7 +302,30 @@
             "bmi": 32.4,
             "pedigree": 0.549,
             "age": 27.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__glucose",
+              "contribution": 0.2425
+            },
+            {
+              "feature": "num__pregnancies",
+              "contribution": -0.1216
+            },
+            {
+              "feature": "num__age",
+              "contribution": -0.0563
+            },
+            {
+              "feature": "num__pedigree",
+              "contribution": 0.044
+            },
+            {
+              "feature": "num__skinfold",
+              "contribution": 0.0432
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.9164
         }
       ],
       "false_positives": [
@@ -226,7 +341,30 @@
             "bmi": 27.7,
             "pedigree": 0.182,
             "age": 54.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__glucose",
+              "contribution": 1.5236
+            },
+            {
+              "feature": "num__pregnancies",
+              "contribution": 0.843
+            },
+            {
+              "feature": "num__bmi",
+              "contribution": -0.5371
+            },
+            {
+              "feature": "num__pedigree",
+              "contribution": -0.1921
+            },
+            {
+              "feature": "num__age",
+              "contribution": 0.1756
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.9859
         },
         {
           "model_probability": 0.8734,
@@ -240,7 +378,30 @@
             "bmi": 52.3,
             "pedigree": 0.427,
             "age": 23.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__bmi",
+              "contribution": 2.1498
+            },
+            {
+              "feature": "num__glucose",
+              "contribution": 1.6367
+            },
+            {
+              "feature": "num__pregnancies",
+              "contribution": -0.5351
+            },
+            {
+              "feature": "num__insulin",
+              "contribution": -0.2295
+            },
+            {
+              "feature": "num__age",
+              "contribution": -0.0906
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.9705
         },
         {
           "model_probability": 0.8153,
@@ -254,7 +415,30 @@
             "bmi": 47.9,
             "pedigree": 0.259,
             "age": 26.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__bmi",
+              "contribution": 1.6693
+            },
+            {
+              "feature": "num__glucose",
+              "contribution": 1.6367
+            },
+            {
+              "feature": "num__pregnancies",
+              "contribution": -0.5351
+            },
+            {
+              "feature": "num__skinfold",
+              "contribution": -0.157
+            },
+            {
+              "feature": "num__pedigree",
+              "contribution": -0.1425
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.9702
         },
         {
           "model_probability": 0.8624,
@@ -268,7 +452,30 @@
             "bmi": 34.2,
             "pedigree": 0.164,
             "age": 60.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__glucose",
+              "contribution": 2.1642
+            },
+            {
+              "feature": "num__pregnancies",
+              "contribution": 0.4296
+            },
+            {
+              "feature": "num__age",
+              "contribution": 0.2271
+            },
+            {
+              "feature": "num__pedigree",
+              "contribution": -0.2036
+            },
+            {
+              "feature": "num__bmi",
+              "contribution": 0.1729
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.9677
         },
         {
           "model_probability": 0.8187,
@@ -282,10 +489,33 @@
             "bmi": 30.9,
             "pedigree": 0.299,
             "age": 34.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__glucose",
+              "contribution": 2.6164
+            },
+            {
+              "feature": "num__bmi",
+              "contribution": -0.1876
+            },
+            {
+              "feature": "num__skinfold",
+              "contribution": 0.1545
+            },
+            {
+              "feature": "num__pregnancies",
+              "contribution": -0.1216
+            },
+            {
+              "feature": "num__pedigree",
+              "contribution": -0.1168
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.9932
         }
       ],
-      "_note": "Held-out test records the selected model got wrong, with the raw dataset feature values (null = genuinely missing in the source)."
+      "_note": "Held-out test records the selected model got wrong, with the raw dataset feature values (null = genuinely missing in the source). `top_contributions` are exact linear SHAP values (coefficient x deviation from the train-split mean, in transformed feature space); a positive value pushes the model toward the positive class. They describe model behaviour, not causal effects."
     },
     "linear_explanation_baseline": {
       "note": "train-split means of transformed features, for exact linear SHAP",

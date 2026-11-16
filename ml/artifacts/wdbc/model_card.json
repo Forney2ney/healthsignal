@@ -1,7 +1,7 @@
 {
   "model_name": "healthsignal-wdbc-v1",
   "model_type": "sklearn Pipeline[logistic_regression]",
-  "created_utc": "2026-11-16T11:30:41+00:00",
+  "created_utc": "2026-11-16T16:35:48+00:00",
   "prediction_task": "Malignant vs benign classification from fine-needle-aspirate image features",
   "dataset": {
     "name": "UCI Breast Cancer Wisconsin (Diagnostic)",
@@ -199,7 +199,30 @@
             "worst_concave_points": 0.1252,
             "worst_symmetry": 0.3415,
             "worst_fractal_dimension": 0.0974
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__worst_texture",
+              "contribution": -1.2878
+            },
+            {
+              "feature": "num__worst_symmetry",
+              "contribution": 0.853
+            },
+            {
+              "feature": "num__se_texture",
+              "contribution": 0.6085
+            },
+            {
+              "feature": "num__se_radius",
+              "contribution": -0.5876
+            },
+            {
+              "feature": "num__se_perimeter",
+              "contribution": -0.3455
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.474
         },
         {
           "model_probability": 0.3729,
@@ -235,7 +258,30 @@
             "worst_concave_points": 0.1654,
             "worst_symmetry": 0.363,
             "worst_fractal_dimension": 0.1059
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__worst_symmetry",
+              "contribution": 1.2171
+            },
+            {
+              "feature": "num__worst_concavity",
+              "contribution": 0.7498
+            },
+            {
+              "feature": "num__se_radius",
+              "contribution": -0.6517
+            },
+            {
+              "feature": "num__worst_concave_points",
+              "contribution": 0.5244
+            },
+            {
+              "feature": "num__se_compactness",
+              "contribution": -0.4672
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.4761
         },
         {
           "model_probability": 0.2427,
@@ -271,7 +317,30 @@
             "worst_concave_points": 0.1772,
             "worst_symmetry": 0.5166,
             "worst_fractal_dimension": 0.1446
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__se_compactness",
+              "contribution": -5.5762
+            },
+            {
+              "feature": "num__worst_symmetry",
+              "contribution": 3.8184
+            },
+            {
+              "feature": "num__worst_texture",
+              "contribution": 2.5522
+            },
+            {
+              "feature": "num__worst_concavity",
+              "contribution": 2.2725
+            },
+            {
+              "feature": "num__se_fractal_dimension",
+              "contribution": -1.5155
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.6129
         },
         {
           "model_probability": 0.0591,
@@ -307,7 +376,30 @@
             "worst_concave_points": 0.1383,
             "worst_symmetry": 0.2589,
             "worst_fractal_dimension": 0.103
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__worst_texture",
+              "contribution": -1.1472
+            },
+            {
+              "feature": "num__se_radius",
+              "contribution": -0.5547
+            },
+            {
+              "feature": "num__worst_symmetry",
+              "contribution": -0.5458
+            },
+            {
+              "feature": "num__se_texture",
+              "contribution": 0.4247
+            },
+            {
+              "feature": "num__mean_texture",
+              "contribution": -0.4167
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.4795
         }
       ],
       "false_positives": [
@@ -345,10 +437,33 @@
             "worst_concave_points": 0.07763,
             "worst_symmetry": 0.2196,
             "worst_fractal_dimension": 0.07675
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__worst_texture",
+              "contribution": 3.5564
+            },
+            {
+              "feature": "num__mean_texture",
+              "contribution": 1.2886
+            },
+            {
+              "feature": "num__worst_symmetry",
+              "contribution": -1.2114
+            },
+            {
+              "feature": "num__worst_concavity",
+              "contribution": -0.806
+            },
+            {
+              "feature": "num__se_compactness",
+              "contribution": 0.6414
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.5823
         }
       ],
-      "_note": "Held-out test records the selected model got wrong, with the raw dataset feature values (null = genuinely missing in the source)."
+      "_note": "Held-out test records the selected model got wrong, with the raw dataset feature values (null = genuinely missing in the source). `top_contributions` are exact linear SHAP values (coefficient x deviation from the train-split mean, in transformed feature space); a positive value pushes the model toward the positive class. They describe model behaviour, not causal effects."
     },
     "linear_explanation_baseline": {
       "note": "train-split means of transformed features, for exact linear SHAP",

@@ -39,7 +39,15 @@ if __name__ == "__main__":
 
         out[key] = {"positive": pick(1), "negative": pick(0)}
         print(f"[{key}] positives={int((df[target] == 1).sum())} negatives={int((df[target] == 0).sum())}")
+    payload = json.dumps(out, indent=2)
     dest = Path(__file__).resolve().parents[1] / "artifacts" / "sample_cases.json"
     dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    dest.write_text(payload, encoding="utf-8")
     print("sample cases ->", dest)
+
+    # The web UI loads this file as a static asset, so keep a copy in the
+    # frontend's public/ directory in sync with the ML artifact.
+    web_dest = Path(__file__).resolve().parents[2] / "frontend" / "public" / "sample_cases.json"
+    web_dest.parent.mkdir(parents=True, exist_ok=True)
+    web_dest.write_text(payload, encoding="utf-8")
+    print("sample cases ->", web_dest)

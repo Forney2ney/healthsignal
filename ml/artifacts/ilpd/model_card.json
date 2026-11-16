@@ -1,7 +1,7 @@
 {
   "model_name": "healthsignal-ilpd-v1",
   "model_type": "sklearn Pipeline[logistic_regression]",
-  "created_utc": "2026-11-16T11:31:01+00:00",
+  "created_utc": "2026-11-16T16:36:10+00:00",
   "prediction_task": "Liver-patient vs not from age, gender and liver function tests",
   "dataset": {
     "name": "UCI Indian Liver Patient Records (ILPD)",
@@ -162,7 +162,30 @@
             "tp": 6.0,
             "albumin": 3.7,
             "ag_ratio": 1.6
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__age",
+              "contribution": -0.3357
+            },
+            {
+              "feature": "num__sgpt",
+              "contribution": -0.2621
+            },
+            {
+              "feature": "num__db",
+              "contribution": -0.255
+            },
+            {
+              "feature": "num__albumin",
+              "contribution": -0.208
+            },
+            {
+              "feature": "num__sgot",
+              "contribution": -0.1885
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.7043
         },
         {
           "model_probability": 0.432,
@@ -178,7 +201,30 @@
             "tp": 6.8,
             "albumin": 3.4,
             "ag_ratio": 1.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__age",
+              "contribution": -0.5902
+            },
+            {
+              "feature": "num__sgpt",
+              "contribution": -0.4218
+            },
+            {
+              "feature": "num__db",
+              "contribution": -0.255
+            },
+            {
+              "feature": "num__sgot",
+              "contribution": -0.2204
+            },
+            {
+              "feature": "num__alkphos",
+              "contribution": -0.146
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.7939
         },
         {
           "model_probability": 0.3911,
@@ -194,7 +240,30 @@
             "tp": 5.8,
             "albumin": 3.4,
             "ag_ratio": 1.4
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__sgpt",
+              "contribution": -0.3801
+            },
+            {
+              "feature": "num__age",
+              "contribution": -0.3611
+            },
+            {
+              "feature": "num__alkphos",
+              "contribution": -0.3047
+            },
+            {
+              "feature": "num__db",
+              "contribution": -0.2336
+            },
+            {
+              "feature": "num__tp",
+              "contribution": -0.2318
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.7385
         },
         {
           "model_probability": 0.4695,
@@ -210,7 +279,30 @@
             "tp": 6.6,
             "albumin": 3.4,
             "ag_ratio": 1.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__sgpt",
+              "contribution": -0.4913
+            },
+            {
+              "feature": "num__age",
+              "contribution": -0.2594
+            },
+            {
+              "feature": "num__db",
+              "contribution": -0.255
+            },
+            {
+              "feature": "num__sgot",
+              "contribution": -0.2284
+            },
+            {
+              "feature": "num__alkphos",
+              "contribution": -0.1783
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.7994
         },
         {
           "model_probability": 0.4759,
@@ -226,7 +318,30 @@
             "tp": 6.0,
             "albumin": 3.7,
             "ag_ratio": 1.6
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__age",
+              "contribution": -0.3357
+            },
+            {
+              "feature": "num__sgpt",
+              "contribution": -0.2621
+            },
+            {
+              "feature": "num__db",
+              "contribution": -0.255
+            },
+            {
+              "feature": "num__albumin",
+              "contribution": -0.208
+            },
+            {
+              "feature": "num__sgot",
+              "contribution": -0.1885
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.7043
         }
       ],
       "false_positives": [
@@ -244,7 +359,30 @@
             "tp": 7.0,
             "albumin": 3.9,
             "ag_ratio": 1.2
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__age",
+              "contribution": 0.5296
+            },
+            {
+              "feature": "num__albumin",
+              "contribution": -0.2826
+            },
+            {
+              "feature": "num__sgpt",
+              "contribution": -0.2621
+            },
+            {
+              "feature": "num__db",
+              "contribution": -0.2122
+            },
+            {
+              "feature": "num__tp",
+              "contribution": 0.1865
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.7987
         },
         {
           "model_probability": 0.7331,
@@ -260,7 +398,30 @@
             "tp": 6.5,
             "albumin": 3.2,
             "ag_ratio": 0.9
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__sgpt",
+              "contribution": -0.2621
+            },
+            {
+              "feature": "num__age",
+              "contribution": -0.2339
+            },
+            {
+              "feature": "num__sgot",
+              "contribution": 0.1946
+            },
+            {
+              "feature": "num__db",
+              "contribution": -0.1479
+            },
+            {
+              "feature": "num__tb",
+              "contribution": -0.0627
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.9081
         },
         {
           "model_probability": 0.5431,
@@ -276,7 +437,30 @@
             "tp": 7.3,
             "albumin": 4.4,
             "ag_ratio": 1.5
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__albumin",
+              "contribution": -0.469
+            },
+            {
+              "feature": "num__sgpt",
+              "contribution": -0.4496
+            },
+            {
+              "feature": "num__tp",
+              "contribution": 0.2911
+            },
+            {
+              "feature": "num__sgot",
+              "contribution": -0.2151
+            },
+            {
+              "feature": "num__db",
+              "contribution": -0.2122
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.7895
         },
         {
           "model_probability": 0.5787,
@@ -292,7 +476,30 @@
             "tp": 7.1,
             "albumin": 4.5,
             "ag_ratio": 1.7
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__albumin",
+              "contribution": -0.5063
+            },
+            {
+              "feature": "num__sgpt",
+              "contribution": -0.4565
+            },
+            {
+              "feature": "num__sgot",
+              "contribution": -0.2284
+            },
+            {
+              "feature": "num__tp",
+              "contribution": 0.2214
+            },
+            {
+              "feature": "num__db",
+              "contribution": -0.2122
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.7694
         },
         {
           "model_probability": 0.7125,
@@ -308,10 +515,33 @@
             "tp": 7.0,
             "albumin": 3.5,
             "ag_ratio": 1.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__age",
+              "contribution": 0.4023
+            },
+            {
+              "feature": "num__sgpt",
+              "contribution": -0.3801
+            },
+            {
+              "feature": "num__db",
+              "contribution": -0.2336
+            },
+            {
+              "feature": "num__sgot",
+              "contribution": -0.2098
+            },
+            {
+              "feature": "num__tp",
+              "contribution": 0.1865
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.7563
         }
       ],
-      "_note": "Held-out test records the selected model got wrong, with the raw dataset feature values (null = genuinely missing in the source)."
+      "_note": "Held-out test records the selected model got wrong, with the raw dataset feature values (null = genuinely missing in the source). `top_contributions` are exact linear SHAP values (coefficient x deviation from the train-split mean, in transformed feature space); a positive value pushes the model toward the positive class. They describe model behaviour, not causal effects."
     },
     "linear_explanation_baseline": {
       "note": "train-split means of transformed features, for exact linear SHAP",

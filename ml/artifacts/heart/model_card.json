@@ -1,7 +1,7 @@
 {
   "model_name": "healthsignal-heart-v1",
   "model_type": "sklearn Pipeline[logistic_regression]",
-  "created_utc": "2026-11-16T11:30:35+00:00",
+  "created_utc": "2026-11-16T16:35:38+00:00",
   "prediction_task": "Binary indicator of angiographic heart disease (num>0) from clinical measurements",
   "dataset": {
     "name": "UCI Heart Disease (Cleveland, processed)",
@@ -153,7 +153,27 @@
         "note": "DummyClassifier: no learning from features, only class rates"
       }
     },
-    "subgroup_performance": {},
+    "subgroup_performance": {
+      "male": {
+        "n": 60,
+        "roc_auc": 0.9043381535038932,
+        "recall_sensitivity": 0.8709677419354839,
+        "specificity": 0.8275862068965517,
+        "false_negatives": 4,
+        "false_positives": 5,
+        "positive_rate": 0.5166666666666667
+      },
+      "female": {
+        "n": 31,
+        "roc_auc": 0.9727272727272727,
+        "recall_sensitivity": 0.7272727272727273,
+        "specificity": 1.0,
+        "false_negatives": 3,
+        "false_positives": 0,
+        "positive_rate": 0.3548387096774194
+      },
+      "_interpretation_note": "Small subgroup sizes mean wide uncertainty; these figures are reported for transparency and MUST NOT be used to claim the model is fair."
+    },
     "failure_cases": {
       "false_negatives": [
         {
@@ -173,7 +193,30 @@
             "slope": 2.0,
             "ca": 0.0,
             "thal": 3.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__ca",
+              "contribution": -0.7254
+            },
+            {
+              "feature": "num__thal",
+              "contribution": -0.547
+            },
+            {
+              "feature": "cat__cp_3.0",
+              "contribution": -0.4942
+            },
+            {
+              "feature": "num__sex",
+              "contribution": 0.3402
+            },
+            {
+              "feature": "cat__cp_4.0",
+              "contribution": -0.2504
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.5797
         },
         {
           "model_probability": 0.1872,
@@ -192,7 +235,30 @@
             "slope": 1.0,
             "ca": 2.0,
             "thal": 3.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__ca",
+              "contribution": 1.5698
+            },
+            {
+              "feature": "num__sex",
+              "contribution": -0.7526
+            },
+            {
+              "feature": "num__cp",
+              "contribution": -0.5799
+            },
+            {
+              "feature": "num__fbs",
+              "contribution": -0.5787
+            },
+            {
+              "feature": "num__thal",
+              "contribution": -0.547
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.6346
         },
         {
           "model_probability": 0.2144,
@@ -211,7 +277,30 @@
             "slope": 2.0,
             "ca": 1.0,
             "thal": 3.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__cp",
+              "contribution": -1.0698
+            },
+            {
+              "feature": "num__fbs",
+              "contribution": -0.5787
+            },
+            {
+              "feature": "num__thal",
+              "contribution": -0.547
+            },
+            {
+              "feature": "num__ca",
+              "contribution": 0.4222
+            },
+            {
+              "feature": "num__sex",
+              "contribution": 0.3402
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.5638
         },
         {
           "model_probability": 0.2932,
@@ -230,7 +319,30 @@
             "slope": 2.0,
             "ca": 0.0,
             "thal": 7.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__cp",
+              "contribution": -1.0698
+            },
+            {
+              "feature": "num__thal",
+              "contribution": 0.767
+            },
+            {
+              "feature": "num__ca",
+              "contribution": -0.7254
+            },
+            {
+              "feature": "num__thalach",
+              "contribution": -0.3714
+            },
+            {
+              "feature": "num__sex",
+              "contribution": 0.3402
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.5848
         },
         {
           "model_probability": 0.4724,
@@ -249,7 +361,30 @@
             "slope": 2.0,
             "ca": 1.0,
             "thal": 7.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__thal",
+              "contribution": 0.767
+            },
+            {
+              "feature": "num__sex",
+              "contribution": -0.7526
+            },
+            {
+              "feature": "num__thalach",
+              "contribution": 0.6057
+            },
+            {
+              "feature": "cat__cp_3.0",
+              "contribution": -0.4942
+            },
+            {
+              "feature": "num__ca",
+              "contribution": 0.4222
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.6289
         }
       ],
       "false_positives": [
@@ -270,7 +405,30 @@
             "slope": 1.0,
             "ca": 0.0,
             "thal": 6.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__ca",
+              "contribution": -0.7254
+            },
+            {
+              "feature": "num__thal",
+              "contribution": 0.4385
+            },
+            {
+              "feature": "num__trestbps",
+              "contribution": 0.4247
+            },
+            {
+              "feature": "num__cp",
+              "contribution": 0.3997
+            },
+            {
+              "feature": "num__sex",
+              "contribution": 0.3402
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.544
         },
         {
           "model_probability": 0.5504,
@@ -289,7 +447,30 @@
             "slope": 1.0,
             "ca": 3.0,
             "thal": 3.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__ca",
+              "contribution": 2.7174
+            },
+            {
+              "feature": "num__fbs",
+              "contribution": -0.5787
+            },
+            {
+              "feature": "num__thal",
+              "contribution": -0.547
+            },
+            {
+              "feature": "cat__cp_3.0",
+              "contribution": -0.4942
+            },
+            {
+              "feature": "num__sex",
+              "contribution": 0.3402
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.7182
         },
         {
           "model_probability": 0.7647,
@@ -308,7 +489,30 @@
             "slope": 2.0,
             "ca": 0.0,
             "thal": 7.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__thal",
+              "contribution": 0.767
+            },
+            {
+              "feature": "num__ca",
+              "contribution": -0.7254
+            },
+            {
+              "feature": "num__cp",
+              "contribution": 0.3997
+            },
+            {
+              "feature": "num__sex",
+              "contribution": 0.3402
+            },
+            {
+              "feature": "cat__cp_4.0",
+              "contribution": 0.26
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.605
         },
         {
           "model_probability": 0.9564,
@@ -327,7 +531,30 @@
             "slope": 2.0,
             "ca": 3.0,
             "thal": 7.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__ca",
+              "contribution": 2.7174
+            },
+            {
+              "feature": "num__thal",
+              "contribution": 0.767
+            },
+            {
+              "feature": "cat__cp_3.0",
+              "contribution": -0.4942
+            },
+            {
+              "feature": "num__sex",
+              "contribution": 0.3402
+            },
+            {
+              "feature": "cat__cp_4.0",
+              "contribution": -0.2504
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.7615
         },
         {
           "model_probability": 0.6983,
@@ -346,10 +573,33 @@
             "slope": 1.0,
             "ca": 0.0,
             "thal": 7.0
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__thal",
+              "contribution": 0.767
+            },
+            {
+              "feature": "num__ca",
+              "contribution": -0.7254
+            },
+            {
+              "feature": "num__cp",
+              "contribution": 0.3997
+            },
+            {
+              "feature": "num__sex",
+              "contribution": 0.3402
+            },
+            {
+              "feature": "num__exang",
+              "contribution": 0.3351
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.5708
         }
       ],
-      "_note": "Held-out test records the selected model got wrong, with the raw dataset feature values (null = genuinely missing in the source)."
+      "_note": "Held-out test records the selected model got wrong, with the raw dataset feature values (null = genuinely missing in the source). `top_contributions` are exact linear SHAP values (coefficient x deviation from the train-split mean, in transformed feature space); a positive value pushes the model toward the positive class. They describe model behaviour, not causal effects."
     },
     "linear_explanation_baseline": {
       "note": "train-split means of transformed features, for exact linear SHAP",

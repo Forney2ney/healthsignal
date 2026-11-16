@@ -1,7 +1,7 @@
 {
   "model_name": "healthsignal-ckd-v1",
   "model_type": "sklearn Pipeline[logistic_regression]",
-  "created_utc": "2026-11-16T11:30:48+00:00",
+  "created_utc": "2026-11-16T16:35:55+00:00",
   "prediction_task": "Classify chronic kidney disease from 24 clinical/lab measurements, many with missing values",
   "dataset": {
     "name": "UCI Chronic Kidney Disease",
@@ -204,7 +204,30 @@
             "appet": "good",
             "pe": "no",
             "ane": "no"
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__hemo",
+              "contribution": -1.6981
+            },
+            {
+              "feature": "num__pcv",
+              "contribution": -1.646
+            },
+            {
+              "feature": "num__bp",
+              "contribution": 0.8004
+            },
+            {
+              "feature": "num__bu",
+              "contribution": -0.447
+            },
+            {
+              "feature": "cat__dm_yes",
+              "contribution": -0.4434
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.6752
         },
         {
           "model_probability": 0.0006,
@@ -234,7 +257,30 @@
             "appet": "good",
             "pe": "yes",
             "ane": "no"
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__pot",
+              "contribution": -20.0527
+            },
+            {
+              "feature": "num__sc",
+              "contribution": 5.8672
+            },
+            {
+              "feature": "num__bu",
+              "contribution": 3.9188
+            },
+            {
+              "feature": "num__sod",
+              "contribution": -1.7922
+            },
+            {
+              "feature": "num__bgr",
+              "contribution": 0.7278
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.8979
         },
         {
           "model_probability": 0.0223,
@@ -264,7 +310,30 @@
             "appet": "good",
             "pe": "no",
             "ane": "no"
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__pcv",
+              "contribution": -2.3621
+            },
+            {
+              "feature": "num__bp",
+              "contribution": -1.035
+            },
+            {
+              "feature": "num__hemo",
+              "contribution": -0.9467
+            },
+            {
+              "feature": "num__bgr",
+              "contribution": -0.9059
+            },
+            {
+              "feature": "cat__dm_yes",
+              "contribution": -0.4434
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.6806
         },
         {
           "model_probability": 0.0006,
@@ -294,7 +363,30 @@
             "appet": "good",
             "pe": "no",
             "ane": "yes"
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__pot",
+              "contribution": -24.6807
+            },
+            {
+              "feature": "num__hemo",
+              "contribution": 3.015
+            },
+            {
+              "feature": "num__pcv",
+              "contribution": 2.8299
+            },
+            {
+              "feature": "num__rbcc",
+              "contribution": 1.6673
+            },
+            {
+              "feature": "num__bgr",
+              "contribution": 1.4902
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.8338
         },
         {
           "model_probability": 0.3689,
@@ -324,7 +416,30 @@
             "appet": "good",
             "pe": "no",
             "ane": "no"
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__hemo",
+              "contribution": -2.4495
+            },
+            {
+              "feature": "num__pcv",
+              "contribution": -2.3621
+            },
+            {
+              "feature": "num__bgr",
+              "contribution": 1.236
+            },
+            {
+              "feature": "num__rbcc",
+              "contribution": -0.7839
+            },
+            {
+              "feature": "cat__rbc_abnormal",
+              "contribution": 0.7317
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.6245
         }
       ],
       "false_positives": [
@@ -356,10 +471,33 @@
             "appet": "good",
             "pe": "no",
             "ane": "no"
-          }
+          },
+          "top_contributions": [
+            {
+              "feature": "num__pcv",
+              "contribution": -1.1089
+            },
+            {
+              "feature": "num__sc",
+              "contribution": -0.5311
+            },
+            {
+              "feature": "cat__dm_yes",
+              "contribution": -0.4434
+            },
+            {
+              "feature": "cat__dm_no",
+              "contribution": -0.4424
+            },
+            {
+              "feature": "num__hemo",
+              "contribution": -0.4003
+            }
+          ],
+          "top5_share_of_absolute_contribution": 0.5265
         }
       ],
-      "_note": "Held-out test records the selected model got wrong, with the raw dataset feature values (null = genuinely missing in the source)."
+      "_note": "Held-out test records the selected model got wrong, with the raw dataset feature values (null = genuinely missing in the source). `top_contributions` are exact linear SHAP values (coefficient x deviation from the train-split mean, in transformed feature space); a positive value pushes the model toward the positive class. They describe model behaviour, not causal effects."
     },
     "linear_explanation_baseline": {
       "note": "train-split means of transformed features, for exact linear SHAP",

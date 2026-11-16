@@ -60,3 +60,39 @@ Append-only record of major technical decisions. Newest last.
 ## D-012 (Phase 1) — Offline end-to-end verification before frontend wiring; parent-dir audit
 **Observed:** several backend path calculations used `parents[3]` from `backend/app/*`, resolving one directory too high on this machine (`C:\Users\User\Projects`).
 **Fix:** all repo-relative paths now use `parents[2]` from `backend/app/*.py`; audited with grep (only the tests file, since fixed).
+
+## D-013 (Phase 2) — Official Veritas requirements audited; mandatory evaluation implemented
+**Observed (audit).** The project already had: five trained tabular models with held-out metrics, a working pretrained chest X-ray pipeline with Grad-CAM, a FastAPI + React application, a pytest suite, dashboard / model forms / imaging / reports / assistant / research pages, and documentation. What it did NOT have, which the organisers require: a baseline comparison, false positives and false negatives reported separately, identified failure cases, subgroup performance, one-page write-up, credits register.
+
+**Decision.** Added `ml/scripts/run_full_evaluation.py`, which for every dataset produces, in one deterministic run (seed 42):
+
+- model selection by 5-fold stratified CV on the train split only,
+- `DummyClassifier(stratified)` and `DummyClassifier(most_frequent)` baselines on the SAME held-out test split,
+- accuracy, balanced accuracy, precision, recall/sensitivity, specificity, F1, ROC-AUC, PR-AUC, Brier and the confusion matrix, with `false_positives` and `false_negatives` as separate top-level numbers,
+- subgroup performance where a demographic column exists (recorded sex for heart and ILPD, age band for pima and ckd; WDBC has no usable demographic attribute in its processed features), with an explicit "this is not a fairness claim" note,
+- the actual misclassified test records with raw feature values and exact linear-SHAP contributions.
+
+Model cards were regenerated with this script. No metric in the submission is hand-transcribed.
+
+**Rationale.** The organisers make baseline + FP/FN + failure analysis mandatory. Producing them from a script keeps the numbers reproducible and honest.
+
+## D-014 (Phase 2) — Required disclaimer promoted to a first-class UI element
+The exact sentence **"This project is a prototype and is not medical advice."** appears in the global application banner (`frontend/src/App.tsx`) and verbatim in `docs/ONEPAGE_SUBMIT.md`.
+
+## D-015 (Phase 2) — Focus of the submission
+The submission demonstrates ONE end-to-end workflow rather than the full platform breadth: a user (clinician-adjacent individual or researcher) enters real clinical measurements and labs, each specialised model returns an indicator with per-feature SHAP explanation, disclosed imputation and its own dataset/metrics/caveats; chest X-ray runs the genuine pretrained model with Grad-CAM. Additional models are available but are not load-bearing for the demo.
+
+## D-016 (Phase 2) — Evaluation reconciliation: four defects fixed before submission
+**Observed and fixed:**
+
+1. **Heart subgroups silently empty.** `sex` is stored as a float (`1.0`), while the subgroup matcher compared it to the string `"1"`, so no heart subgroup was ever reported. The matcher now compares numeric group keys numerically. Heart now reports male (n=60, recall 0.871) and female (n=31, recall 0.727).
+2. **Evaluation did not persist pipelines.** `run_full_evaluation.py` wrote model cards but no `model.joblib`, so re-running evaluation alone could leave cards without matching models. It now saves each fitted pipeline next to its card.
+3. **Deprecated trainer could overwrite compliant cards.** `train_all.py` called `train_tabular.run_all`, which does not produce baselines, separate FP/FN, subgroups or failure records. `train_all.py` now delegates to `run_full_evaluation.run()`, so the documented reproduction command produces exactly the artifacts quoted in the submission.
+4. **Failure records lacked attribution.** They now include exact linear-SHAP `top_contributions` and `top5_share_of_absolute_contribution` per misclassified record, computed against train-split feature means (no leakage). The former `~2 minutes` runtime claim was replaced with the measured `train_all.py` runtime (52.2 s on the submission CPU).
+
+**Rationale:** each defect produced a false or missing statement in submission-facing material; the fix is in the generator, not in hand-edited numbers.
+
+## D-017 (Phase 2) — Test isolation: duplicate conftest import reset the DB override
+**Observed:** `backend/tests/test_permissions.py` imported `make_user` from `tests.conftest`. Re-executing that module reset `app.dependency_overrides[get_db]` to its module-level fallback database, so requests in the test saw a different database and returned 401.
+**Fix:** the helper user is created locally inside the test module; no test imports `conftest`. Full suite: 29 passed (23.70 s, project `.venv`).
+**Rationale:** the override must remain the per-test database for the whole test; production code was correct.

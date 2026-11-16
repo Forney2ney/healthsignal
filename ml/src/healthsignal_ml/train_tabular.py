@@ -1,4 +1,11 @@
-"""Training and evaluation pipeline for HealthSignal tabular models.
+"""Legacy training pipeline for HealthSignal tabular models.
+
+DEPRECATED for submission artifacts. This module is retained for reference and
+for its original baseline-free evaluation. The canonical path is
+``ml/scripts/train_all.py``, which delegates to ``ml/scripts/run_full_evaluation.py``
+and produces the mandatory baseline comparison, separate FP/FN counts, subgroup
+figures and failure records. Cards written by this module alone are incomplete
+for the hackathon requirements.
 
 Methodology (documented in every generated model card):
   1. Stratified 70/30 train/test split, seed 42.
@@ -96,24 +103,6 @@ def _build_preprocessor(numeric_cols: list[str], categorical_cols: list[str]) ->
 def _specificity(cm: np.ndarray) -> float:
     tn, fp, fn, tp = cm.ravel()
     return float(tn / (tn + fp)) if (tn + fp) else float("nan")
-
-
-# Datasets with a demographic attribute that supports subgroup reporting.
-SUBGROUP_SPECS: dict[str, dict] = {
-    "heart": {"column": "sex", "groups": {"male": "1", "female": "0"}, "title": "sex (as recorded in source)"},
-    "ilpd": {"column": "gender", "groups": {"male": "Male", "female": "Female"}, "title": "sex (as recorded in source)"},
-    "pima": {"column": "age", "groups": {"age<40": (0, 40), "age>=40": (40, 130)}, "title": "age band"},
-    "ckd": {"column": "age", "groups": {"age<55": (0, 55), "age>=55": (55, 130)}, "title": "age band"},
-}
-
-
-def _baselines(seed: int) -> dict:
-    from sklearn.dummy import DummyClassifier
-
-    return {
-        "baseline_stratified_random": DummyClassifier(strategy="stratified", random_state=seed),
-        "baseline_most_frequent": DummyClassifier(strategy="most_frequent"),
-    }
 
 
 def evaluate(name: str, df: pd.DataFrame, target: str, spec: DatasetSpec) -> dict:

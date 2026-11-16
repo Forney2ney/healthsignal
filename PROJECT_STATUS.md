@@ -4,7 +4,7 @@ Status classes: IMPLEMENTED AND TESTED / IMPLEMENTED BUT NOT FULLY TESTED / PART
 SIMULATED FOR DEMONSTRATION / PLANNED / BLOCKED.
 Only results that were actually observed may be marked tested. Nothing here may be fabricated.
 
-_Last updated: 2026-11-16 — submission-readiness pass (test fixes, metric reconciliation, clean-clone reproducibility)._
+_Last updated: 2026-11-16 — final reconciliation (heart subgroup fix, evaluation artifacts, docs, UI build, test suite)._
 
 ## Heads-up status (audit summary)
 
@@ -35,8 +35,9 @@ Held-out 30% test split. Baseline = `DummyClassifier(stratified)` on the same sp
 | cxr_nih | 14-pathology thoracic | Pretrained DenseNet-121 (NIH ChestX-ray14) | published AUCs quoted in card; NOT re-validated locally | — | — | — | — | — | PARTIALLY IMPLEMENTED (inference + Grad-CAM work; no local re-validation) |
 
 All five tabular cards now additionally contain: CV selection table, two baselines, confusion matrix,
-separate FP/FN counts, subgroup performance (sex / age band), and real failure-case records.
-See `ml/artifacts/<task>/model_card.json`.
+separate FP/FN counts, subgroup performance where the source carries a demographic column (recorded sex for
+heart and ILPD, age bands for Pima and CKD; WDBC has none), and real failure-case records with exact linear-SHAP
+contributions for each miss. See `ml/artifacts/<task>/model_card.json`.
 
 ## Features
 
@@ -57,12 +58,15 @@ See `ml/artifacts/<task>/model_card.json`.
 
 ## Test suite status
 
-Latest observed full-suite run (2026-11-16, project `.venv`, `pytest tests -q`): **29 passed, 0 failed**,
-exit code 0. Both previously failing tests were fixed:
+Latest observed full-suite run (2026-11-16, project `.venv`, `pytest tests -q`): **29 passed, 0 failed**
+in 22.12 s, exit code 0. Both previously failing tests were fixed:
 `test_reports.py::test_report_generation_and_markdown` (expected heading text) and
 `test_permissions.py::test_patient_cannot_read_other_profiles`, whose duplicate import of
 `tests.conftest` reset `app.dependency_overrides[get_db]` to the fallback database and produced a 401.
 The test now creates its helper user locally instead of re-importing conftest.
+
+Frontend production build (`npm run build`, TypeScript + Vite 6.4.6): **succeeded** on 2026-11-16
+(2524 modules, 7.30 s; one non-blocking chunk-size warning).
 
 ## Known limitations (current)
 
