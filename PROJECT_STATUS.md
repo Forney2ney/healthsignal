@@ -53,15 +53,18 @@ contributions for each miss. See `ml/artifacts/<task>/model_card.json`.
 | UI refresh: icon navigation, dashboard completeness charts, model ROC-AUC/baseline tiles, sample-case row loading, X-ray thumbnail gallery, interactive Grad-CAM reveal slider | IMPLEMENTED AND TESTED (manual headless-browser walkthrough; production build passes) |
 | Session restoration on page reload (JWT from localStorage) | IMPLEMENTED AND TESTED (manual browser walkthrough) |
 | Required disclaimer in app banner + write-up | IMPLEMENTED AND TESTED |
-| One-page write-up (`docs/ONEPAGE_SUBMIT.md`) | IMPLEMENTED (team names/schools still to fill by the owner) |
+| One-page write-up (`docs/ONEPAGE_SUBMIT.md`) | IMPLEMENTED (team names filled in by the owner) |
 | Credits/source register (`CREDITS.md`) | IMPLEMENTED |
 | Persistent instructions updated (spec §16, AGENTS.md, CLAUDE.md, GEMINI.md) | IMPLEMENTED |
 | git history | IMPLEMENTED AND TESTED (evaluation and UI commits pushed to `origin/main`; clean clone verified) |
 
 ## Test suite status
 
-Latest observed full-suite run (2026-11-16, project `.venv`, `pytest tests -q`): **29 passed, 0 failed**
-in 22.12 s, exit code 0. Both previously failing tests were fixed:
+Latest observed full-suite run (2026-11-16, project `.venv`, `pytest tests -q`): **31 passed, 0 failed**
+in 22.79 s, exit code 0. Two new tests cover the deployment liveness path and the sample-case asset
+(`backend/tests/test_health.py`): `/health` must agree with `/api/health`, and the asset served by the
+backend must match both `ml/artifacts/sample_cases.json` and the frontend's static copy. Two previously
+failing tests were fixed:
 `test_reports.py::test_report_generation_and_markdown` (expected heading text) and
 `test_permissions.py::test_patient_cannot_read_other_profiles`, whose duplicate import of
 `tests.conftest` reset `app.dependency_overrides[get_db]` to the fallback database and produced a 401.
@@ -106,7 +109,7 @@ A fresh `git clone --depth 1` of the public repository (tracked files only, incl
 pipelines, model cards, sample cases and the 28.4 MB pretrained X-ray weights) was verified in a temporary
 directory using the project `.venv` and Node 24:
 
-- `pytest tests -q` from `backend/`: **29 passed** (24.04 s), exit 0.
+- `pytest tests -q` from `backend/`: **31 passed** (25.19 s), exit 0.
 - `npm ci` then `npm run build` from `frontend/`: exit 0, build 7.93 s; `dist/sample_cases.json` present.
 - `seed_demo.py` created the four demo users and the labelled SYNTHETIC profile using the committed models.
 - Backend on a fresh SQLite file: `/api/health`, login, `/api/models` (5 tabular models; heart baseline
@@ -125,5 +128,6 @@ remain available for reproduction (measured 52.2 s).
 - Public accessibility confirmed with an unauthenticated HTTP fetch of the repository page; the README
   renders correctly (UTF-8, no mojibake) and all required files are present.
 - No `.env`, credentials or private keys are tracked.
-- Remaining before submission: fill in team names, emails and schools in `docs/ONEPAGE_SUBMIT.md`
-  (placeholder deliberately left by the project owner), then submit the write-up link and repo link.
+- Remaining before submission: none inside the repository — team names are filled in
+  `docs/ONEPAGE_SUBMIT.md`. If the submission portal also asks for emails or schools, enter them there;
+  then submit the write-up link and repo link.

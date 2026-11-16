@@ -41,6 +41,16 @@ def health():
     return {"status": "ok", "service": "healthsignal", "research_prototype": True}
 
 
+@app.get("/health")
+def health_alias():
+    """Conventional liveness path for deployment probes.
+
+    Same payload as /api/health. Hosted environments and container orchestrators
+    commonly probe "/health", so serving it avoids false "service down" reports.
+    """
+    return health()
+
+
 @app.get("/sample_cases.json")
 def sample_cases():
     from pathlib import Path
