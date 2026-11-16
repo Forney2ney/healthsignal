@@ -22,6 +22,21 @@ SAFE_HARBOUR = (
 DOMAIN_META = model_registry.DOMAIN_META
 
 
+def _held_out_metrics(card: dict) -> dict:
+    """Read held-out test metrics from either card schema version."""
+    methodology = card.get("methodology", {})
+    if "held_out_test_metrics" in methodology:
+        return methodology["held_out_test_metrics"]
+    return methodology.get("final_metrics_on_held_out_test", {})
+
+
+def _baseline(card: dict) -> dict:
+    base = card.get("methodology", {}).get("baselines_on_same_test_split", {})
+    stratified = base.get("baseline_stratified_random", {})
+    return {"baseline_roc_auc": stratified.get("roc_auc"),
+            "baseline_note": "stratified-random dummy on the same held-out split"}
+
+
 def _available() -> list[str]:
     return model_registry.available_models()
 
@@ -32,7 +47,11 @@ def list_models():
     for key in _available():
         handle = model_registry.load_model(key)
         card = handle.card
-        metrics = card["methodology"]["final_metrics_on_held_out_test"]
+        metrics = _held_out_metrics(card)
+        performance = {k: metrics[k] for k in ("roc_auc", "pr_auc", "recall_sensitivity", "specificity", "f1", "brier", "n") if k in metrics}
+        performance.update(_baseline(card))
+        performance["false_positives"] = metrics.get("false_positives")
+        performance["false_negatives"] = metrics.get("false_negatives")
         out.append({
             "model_key": key,
             "model_name": card["model_name"],
@@ -41,9 +60,8 @@ def list_models():
             "system": DOMAIN_META[key]["system"],
             "human_task": DOMAIN_META[key]["human_task"],
             "dataset": card["dataset"],
-            "performance": {k: metrics[k] for k in
-                            ("roc_auc", "pr_auc", "recall_sensitivity", "specificity",
-                             "f1", "brier", "n_train", "n_test")},
+            "performance": performance,
+            "subgroup_performance": card.get("methodology", {}).get("subgroup_performance", {}),
             "feature_schema": handle.feature_schema,
             "intended_use": card["intended_use"],
             "limitations": card["limitations"],

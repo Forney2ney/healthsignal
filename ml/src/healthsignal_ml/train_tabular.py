@@ -98,6 +98,24 @@ def _specificity(cm: np.ndarray) -> float:
     return float(tn / (tn + fp)) if (tn + fp) else float("nan")
 
 
+# Datasets with a demographic attribute that supports subgroup reporting.
+SUBGROUP_SPECS: dict[str, dict] = {
+    "heart": {"column": "sex", "groups": {"male": "1", "female": "0"}, "title": "sex (as recorded in source)"},
+    "ilpd": {"column": "gender", "groups": {"male": "Male", "female": "Female"}, "title": "sex (as recorded in source)"},
+    "pima": {"column": "age", "groups": {"age<40": (0, 40), "age>=40": (40, 130)}, "title": "age band"},
+    "ckd": {"column": "age", "groups": {"age<55": (0, 55), "age>=55": (55, 130)}, "title": "age band"},
+}
+
+
+def _baselines(seed: int) -> dict:
+    from sklearn.dummy import DummyClassifier
+
+    return {
+        "baseline_stratified_random": DummyClassifier(strategy="stratified", random_state=seed),
+        "baseline_most_frequent": DummyClassifier(strategy="most_frequent"),
+    }
+
+
 def evaluate(name: str, df: pd.DataFrame, target: str, spec: DatasetSpec) -> dict:
     y = df[target].astype(int).to_numpy()
     X = df.drop(columns=[target])

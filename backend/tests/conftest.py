@@ -9,7 +9,6 @@ sys.path.insert(0, str(BACKEND))
 from fastapi.testclient import TestClient  # noqa: E402
 from sqlalchemy import create_engine  # noqa: E402
 from sqlalchemy.orm import sessionmaker  # noqa: E402
-from sqlalchemy.pool import StaticPool  # noqa: E402
 
 from app import ml_bridge  # noqa: E402,F401  (adds ml/src to sys.path)
 from app.db import Base, get_db  # noqa: E402
@@ -17,37 +16,48 @@ from app.main import app  # noqa: E402
 from app.models import User  # noqa: E402
 from app.security import hash_password  # noqa: E402
 
-engine = create_engine("sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool)
-TestingSession = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
-
-def override_get_db():
-    db = TestingSession()
+def _fallback_db():
+    """Module-level default so endpoints work even before a per-test db fixture runs."""
+    engine = create_engine("sqlite:///./_pytest_fallback.db", connect_args={"check_same_thread": False})
+    Base.metadata.create_all(bind=engine)
+    Session = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+    db = Session()
     try:
         yield db
     finally:
         db.close()
 
 
-app.dependency_overrides[get_db] = override_get_db
-
-
-@pytest.fixture(scope="session", autouse=True)
-def _db():
-    Base.metadata.create_all(bind=engine)
-    yield
+app.dependency_overrides[get_db] = _fallback_db
 
 
 @pytest.fixture()
-def db():
-    # Fresh schema per test: the in-memory DB is session-scoped for speed, but
-    # each test must not see rows seeded by earlier tests.
-    Base.metadata.drop_all(bind=engine)
+def db(tmp_path):
+    """Fresh file-based SQLite database per test.
+
+    (An in-memory StaticPool database is silently destroyed if SQLAlchemy ever
+    invalidates the shared connection, which produced phantom "no such table"
+    failures mid-suite; a temp file database is deterministic.)
+    """
+    engine = create_engine(f"sqlite:///{tmp_path / 'test.db'}", connect_args={"check_same_thread": False})
     Base.metadata.create_all(bind=engine)
-    session = TestingSession()
+    TestSession = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+
+    def _override():
+        session = TestSession()
+        try:
+            yield session
+        finally:
+            session.close()
+
+    app.dependency_overrides[get_db] = _override
+    session = TestSession()
     yield session
     session.rollback()
     session.close()
+    app.dependency_overrides[get_db] = _fallback_db
+    engine.dispose()
 
 
 @pytest.fixture()

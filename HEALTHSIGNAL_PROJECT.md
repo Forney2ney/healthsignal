@@ -464,3 +464,102 @@ be implemented and tested without compromising this core experience.
 
 **Guiding principle: ambitious scope, disciplined execution, verifiable
 results and honest communication.**
+
+---
+
+## 16. Official competition requirements (Veritas AI International High School Hackathon 2026)
+
+These take precedence over any earlier interpretation in this document. They were
+provided by the organisers and must remain available to future agents.
+
+### 16.1 Prototype focus
+
+The long-term multi-disease, multimodal vision remains. The SUBMISSION, however,
+must demonstrate a focused, genuinely working AI prototype:
+
+1. One clearly identified target user.
+2. One specific health problem or prediction task.
+3. At least one real, functioning AI/ML model.
+4. A real input producing an actual model output.
+5. A usable interface demonstrating the complete workflow.
+6. Explainable results where technically appropriate.
+7. A meaningful comparison against a simple baseline.
+8. Honest evaluation using unseen test data.
+
+Do NOT force multiple incompatible models or modalities into the prototype to
+look advanced. Current health-track use case: a person (or clinician) enters real
+clinical measurements and labs; specialised tabular models produce indicator
+scores with per-feature SHAP explanation, disclosed imputation and dataset
+honesty; chest X-rays run a genuine pretrained model with Grad-CAM.
+
+### 16.2 Mandatory evaluation requirements (Health track)
+
+- Public datasets only; never identifiable patient records.
+- Proper training / validation / HELD-OUT TEST sets. No leakage (preprocessing
+  inside CV pipelines; patient-level separation when applicable).
+- Compare the model against an appropriate SIMPLE BASELINE on the same split.
+  Implemented: `DummyClassifier(stratified)` and `DummyClassifier(most_frequent)`
+  in `ml/scripts/run_full_evaluation.py`.
+- Report actual measured performance, never estimated or fabricated metrics.
+- Report FALSE POSITIVES and FALSE NEGATIVES separately.
+- Include precision, recall, F1 and other appropriate metrics, plus the
+  confusion matrix.
+- Identify at least one incorrect prediction or failure case and explain
+  possible reasons. Implemented: `methodology.failure_cases` in each model card.
+- Consider performance across relevant demographic groups where the dataset
+  supports it. Implemented: `methodology.subgroup_performance` (sex for heart /
+  ILPD, age band for Pima / CKD), with an explicit "not a fairness claim" note.
+- Document dataset limitations, class imbalance and generalisability concerns.
+
+### 16.3 Distinctiveness
+
+HealthSignal's differentiators, all demonstrable: (a) evaluation itself is a
+first-class, inspectable output (baselines, separate FP/FN, failure records,
+subgroup figures); (b) missing data stays missing and imputation is disclosed
+per prediction; (c) cross-task aggregation without false equivalence; (d) honest,
+interpretable prediction interface.
+
+### 16.4 Interface and demonstration
+
+A complete working demonstration beats many unfinished features. No fabricated
+predictions, fake patient records, invented model confidence or simulated
+functionality may be presented as real. Any demonstration data must be
+explicitly labelled synthetic.
+
+### 16.5 Required disclaimer
+
+The exact sentence ``This project is a prototype and is not medical advice.``
+must appear in the final write-up (`docs/ONEPAGE_SUBMIT.md`) and in the
+application UI. Equivalent wording must also make clear that HealthSignal is an
+educational/research prototype, not a clinically validated diagnostic system or
+substitute for a qualified healthcare professional.
+
+### 16.6 Required submission documentation
+
+One-page write-up structure (implemented in `docs/ONEPAGE_SUBMIT.md`): project
+name; track and team members; the problem; what we built (inputs, outputs,
+usage); what we added; how it works (datasets, sample counts, preprocessing,
+model); results (baseline vs model on held-out test data); failure analysis;
+what we would do next; sources (datasets, pretrained models, tutorials, AI
+tools, with links).
+
+Submission requires a publicly accessible GitHub repository or Google Colab
+notebook. A demo video of up to two minutes is optional but recommended.
+
+### 16.7 Persistent files
+
+Keep current at all times: this specification, `AGENTS.md` / `CLAUDE.md` /
+`GEMINI.md`, `PROJECT_STATUS.md` (implemented / partial / simulated / planned /
+blocked), `DECISIONS.md`, and `CREDITS.md` (complete source register).
+
+### 16.8 Operating order
+
+1. Working end-to-end AI health use case.
+2. Correct data handling and evaluation.
+3. Reliable demonstration.
+4. Clear, polished interface.
+5. Explainability and useful reporting.
+6. Documentation, reproducibility, submission readiness.
+7. Additional features only if time permits.
+
+Never fabricate progress, test results, sources, citations or capabilities.

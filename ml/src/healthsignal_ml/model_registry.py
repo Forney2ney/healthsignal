@@ -204,7 +204,8 @@ def predict(key: str, values: dict[str, Any]) -> dict:
         explanation = None
         print(f"[explain] {key} explanation failed: {exc}")
 
-    metrics = handle.card["methodology"]["final_metrics_on_held_out_test"]
+    card_m = handle.card.get("methodology", {})
+    metrics = card_m.get("held_out_test_metrics") or card_m.get("final_metrics_on_held_out_test", {})
     return {
         "model_key": key,
         "model_name": handle.card["model_name"],

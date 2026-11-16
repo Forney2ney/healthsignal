@@ -1,4 +1,4 @@
-import { NavLink, Navigate, Route, Routes } from "react-router-dom";
+﻿import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider, useAuth, hasToken } from "./lib/auth";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -22,12 +22,12 @@ function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col">
       <div className="bg-warn/10 border-b border-warn/30 text-xs text-warn px-4 py-2 text-center">
-        Research prototype — not a medical device. Outputs are statistical indicators, not diagnoses.
+        This project is a prototype and is not medical advice. HealthSignal is an educational/research prototype, not a clinically validated diagnostic system or a substitute for a qualified healthcare professional. Outputs are statistical research indicators, not diagnoses.
       </div>
       <div className="flex flex-1">
         <aside className="w-56 shrink-0 border-r border-white/10 p-4 hidden md:block">
           <div className="font-semibold text-lg mb-1">HealthSignal</div>
-          <div className="text-xs text-muted mb-6">multimodal health intelligence · prototype</div>
+          <div className="text-xs text-muted mb-6">multimodal health intelligence Â· prototype</div>
           <nav className="space-y-1">
             {NAV.map((n) => (
               <NavLink

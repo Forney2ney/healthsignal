@@ -25,7 +25,7 @@ def test_report_generation_and_markdown(client, patient_token):
     assert body["limitations"]
 
     md = client.get(f"/api/reports/profile/{p['id']}/markdown", headers=auth(patient_token))
-    assert md.status_code == 200 and "AI-generated research report" in md.text
+    assert md.status_code == 200 and "AI-generated research output - not a medical diagnosis" in md.text.lower()
 
 
 def test_report_requires_auth(client):
