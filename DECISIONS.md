@@ -96,3 +96,8 @@ The submission demonstrates ONE end-to-end workflow rather than the full platfor
 **Observed:** `backend/tests/test_permissions.py` imported `make_user` from `tests.conftest`. Re-executing that module reset `app.dependency_overrides[get_db]` to its module-level fallback database, so requests in the test saw a different database and returned 401.
 **Fix:** the helper user is created locally inside the test module; no test imports `conftest`. Full suite: 29 passed (23.70 s, project `.venv`).
 **Rationale:** the override must remain the per-test database for the whole test; production code was correct.
+
+## D-018 (Phase 2) — Liveness path and static sample-case asset are covered by tests
+**Observed:** the API exposed `/api/health` only, so uptime probes using the conventional `/health` path returned 404 and could report the service as down. Separately, the model forms load `/sample_cases.json` as a static asset; the backend serves it directly, but Vite only proxies `/api`, so the frontend needs its own copy in `frontend/public/` — a missing copy was masked by Vite's SPA fallback (HTTP 200 with `index.html`), leaving the "load example row" buttons silently empty.
+**Fix:** `backend/app/main.py` serves `/health` with the same payload as `/api/health`; `ml/scripts/make_sample_cases.py` writes both the ML artifact and the frontend copy so they cannot drift; `backend/tests/test_health.py` asserts the alias agrees with `/api/health` and that the backend-served asset equals both on-disk copies.
+**Rationale:** a deployment probe and a UI asset must not fail silently; both are now observable, testable and identical across copies.

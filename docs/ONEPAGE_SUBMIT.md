@@ -56,7 +56,7 @@ Most student health projects demo one model with one accuracy number. Our contri
   competitions. Deterministic seed 42; `train_all.py` (retrain + full evaluation of all five models +
   image-model cards) took **52 s** on the CPU used for this submission.
 - **Stack:** Python/FastAPI backend with JWT + bcrypt auth and role-based access; React + TypeScript +
-  Tailwind frontend; SQLite; pytest suite (29 tests, all passing on a clean clone).
+  Tailwind frontend; SQLite; pytest suite (31 tests, all passing on a clean clone).
 
 ## Results (held-out 30% test split, seed 42)
 
