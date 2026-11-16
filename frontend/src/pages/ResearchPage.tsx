@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FlaskConical } from "lucide-react";
 import { api } from "../lib/api";
 
 type Manifest = Record<string, {
@@ -18,8 +19,11 @@ export default function ResearchPage() {
 
   return (
     <div className="space-y-6 max-w-5xl">
-      <header>
-        <h1 className="text-2xl font-semibold">Research workspace</h1>
+      <header className="animate-in">
+        <div className="flex items-center gap-2 text-xs text-accent uppercase tracking-[0.18em] mb-2">
+          <FlaskConical className="w-3.5 h-3.5" /> Provenance & evaluation
+        </div>
+        <h1 className="text-3xl font-semibold tracking-tight">Research workspace</h1>
         <p className="text-sm text-muted">
           Dataset provenance and full model cards (researcher/admin role only). No patient-level data is exposed
           here — this endpoint returns aggregate dataset statistics and model documentation only.

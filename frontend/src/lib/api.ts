@@ -46,6 +46,7 @@ export type ModelCard = {
   performance: {
     roc_auc: number; pr_auc: number; recall_sensitivity: number; specificity: number;
     f1: number; brier: number; n_train: number; n_test: number;
+    baseline_roc_auc?: number | null;
   };
   feature_schema: {
     feature: string; label: string; unit: string; options: Record<string, string> | null;

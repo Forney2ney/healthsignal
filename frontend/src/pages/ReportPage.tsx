@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ScrollText } from "lucide-react";
 import { api, ProfileOut } from "../lib/api";
 
 type Report = {
@@ -36,8 +37,11 @@ export default function ReportPage() {
 
   return (
     <div className="space-y-6 max-w-4xl">
-      <header>
-        <h1 className="text-2xl font-semibold">Shareable health reports</h1>
+      <header className="animate-in">
+        <div className="flex items-center gap-2 text-xs text-accent uppercase tracking-[0.18em] mb-2">
+          <ScrollText className="w-3.5 h-3.5" /> Documentation
+        </div>
+        <h1 className="text-3xl font-semibold tracking-tight">Shareable health reports</h1>
         <p className="text-sm text-muted">
           Two versions are generated: a patient-readable summary, and a structured clinician report with the
           exact inputs, outputs, imputed fields and dataset limitations. Both state that they are AI-generated

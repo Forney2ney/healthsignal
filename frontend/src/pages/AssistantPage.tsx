@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { Sparkles } from "lucide-react";
 import { api } from "../lib/api";
 
 type Answer = {
@@ -36,8 +37,11 @@ export default function AssistantPage() {
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <header>
-        <h1 className="text-2xl font-semibold">Evidence-grounded health assistant</h1>
+      <header className="animate-in">
+        <div className="flex items-center gap-2 text-xs text-accent uppercase tracking-[0.18em] mb-2">
+          <Sparkles className="w-3.5 h-3.5" /> Retrieval, not generation
+        </div>
+        <h1 className="text-3xl font-semibold tracking-tight">Evidence-grounded health assistant</h1>
         <p className="text-sm text-muted">
           No generative model is used. Answers are assembled only from your stored inputs, stored model outputs,
           and a small set of cited public-health references. It states when it has insufficient information, and it
