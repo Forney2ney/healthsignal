@@ -73,3 +73,22 @@ The test now creates its helper user locally instead of re-importing conftest.
   user-wide site-packages; everything runs from the project `.venv` (D-002).
 - Clinician identity verification is a stub; no real-world report-sharing workflow.
 - No HIPAA/GDPR compliance claim.
+- `npm audit` reports 2 moderate advisories in `react-router-dom` 6.x (SSR-hydration error deserialisation).
+  This SPA does not use SSR hydration; fixing requires a breaking major upgrade to v7, deferred past the
+  submission deadline and documented rather than hidden.
+
+## Clean-clone verification (2026-11-16)
+
+A fresh `git clone` of `main` (tracked files only, ~28 MB including the committed pretrained X-ray weights)
+was verified in a temporary directory using the project `.venv` and Node 24:
+
+- `pytest tests -q` from `backend/`: **29 passed**, exit 0.
+- `npm ci` then `npm run build` from `frontend/`: build succeeded (one non-blocking chunk-size warning).
+- Backend started with `uvicorn app.main:app`; `/api/health`, `/docs` and `/openapi.json` (31 paths) returned 200.
+- Live end-to-end smoke: register → create profile → `POST /api/predictions/tabular` returned a genuine
+  heart-model score with explanation, and the interpretation quoted the correct cohort prevalence (46.2%).
+  This caught and fixed a bug where the prevalence was read from the wrong level of the model card (0.0%);
+  a regression test now asserts it matches the card.
+
+Training is therefore NOT required to run the demo from a clean clone; `download_data.py` / `train_all.py`
+remain available for reproduction.
