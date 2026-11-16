@@ -27,7 +27,7 @@ function Shell({ children }: { children: React.ReactNode }) {
       <div className="flex flex-1">
         <aside className="w-56 shrink-0 border-r border-white/10 p-4 hidden md:block">
           <div className="font-semibold text-lg mb-1">HealthSignal</div>
-          <div className="text-xs text-muted mb-6">multimodal health intelligence Â· prototype</div>
+          <div className="text-xs text-muted mb-6">multimodal health intelligence · prototype</div>
           <nav className="space-y-1">
             {NAV.map((n) => (
               <NavLink
