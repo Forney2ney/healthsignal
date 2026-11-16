@@ -4,7 +4,7 @@ Status classes: IMPLEMENTED AND TESTED / IMPLEMENTED BUT NOT FULLY TESTED / PART
 SIMULATED FOR DEMONSTRATION / PLANNED / BLOCKED.
 Only results that were actually observed may be marked tested. Nothing here may be fabricated.
 
-_Last updated: 2026-11-16 — final reconciliation (heart subgroup fix, evaluation artifacts, docs, UI build, test suite)._
+_Last updated: 2026-11-16 — final reconciliation (heart subgroup fix, evaluation artifacts, docs, UI refresh, test suite)._
 
 ## Heads-up status (audit summary)
 
@@ -50,11 +50,13 @@ contributions for each miss. See `ml/artifacts/<task>/model_card.json`.
 | Chest X-ray inference + Grad-CAM | IMPLEMENTED AND TESTED |
 | Backend API (auth, RBAC, ingestion, predictions, imaging, reports, assistant, audit) | IMPLEMENTED AND TESTED |
 | Frontend dashboard / model forms / imaging / reports / assistant / research | IMPLEMENTED BUT NOT FULLY TESTED (production build passes; manual walkthrough documented) |
+| UI refresh: icon navigation, dashboard completeness charts, model ROC-AUC/baseline tiles, sample-case row loading, X-ray thumbnail gallery, interactive Grad-CAM reveal slider | IMPLEMENTED AND TESTED (manual headless-browser walkthrough; production build passes) |
+| Session restoration on page reload (JWT from localStorage) | IMPLEMENTED AND TESTED (manual browser walkthrough) |
 | Required disclaimer in app banner + write-up | IMPLEMENTED AND TESTED |
-| One-page write-up (`docs/ONEPAGE_SUBMIT.md`) | IMPLEMENTED |
+| One-page write-up (`docs/ONEPAGE_SUBMIT.md`) | IMPLEMENTED (team names/schools still to fill by the owner) |
 | Credits/source register (`CREDITS.md`) | IMPLEMENTED |
 | Persistent instructions updated (spec §16, AGENTS.md, CLAUDE.md, GEMINI.md) | IMPLEMENTED |
-| git history | IMPLEMENTED BUT NOT FULLY TESTED (multiple commits; final commit pending) |
+| git history | IMPLEMENTED AND TESTED (evaluation and UI commits pushed to `origin/main`; clean clone verified) |
 
 ## Test suite status
 
@@ -66,7 +68,24 @@ in 22.12 s, exit code 0. Both previously failing tests were fixed:
 The test now creates its helper user locally instead of re-importing conftest.
 
 Frontend production build (`npm run build`, TypeScript + Vite 6.4.6): **succeeded** on 2026-11-16
-(2524 modules, 7.30 s; one non-blocking chunk-size warning).
+(2524 modules, 8.43 s; one non-blocking chunk-size warning).
+
+## UI refresh verification (2026-11-16)
+
+Manual walkthrough in headless Chrome (CDP), against the live backend and seeded synthetic profile:
+
+- Dashboard, models, imaging, reports, assistant and research pages render with the refreshed icon
+  navigation, gradient shell and charts.
+- "Load positive example row" populated all 13 heart-model inputs from a real de-identified dataset
+  record; "Run prediction" returned a genuine score with linear-SHAP contributions.
+- Clearing one field (`chol`) before inference produced an imputation disclosure naming exactly `chol`,
+  confirming the UI does not silently invent values.
+- Chest X-ray sample ran through the pretrained model; the Grad-CAM overlay loaded and the reveal slider
+  changed the original/overlay comparison.
+- Fixed two real bugs found during this walkthrough: a reload silently signed the user out even though the
+  JWT was stored (session restoration added), and the example-row buttons did nothing because
+  `sample_cases.json` was missing from `frontend/public/` (Vite's SPA fallback returned `index.html` with
+  HTTP 200, masking the 404). `ml/scripts/make_sample_cases.py` now writes both copies to keep them in sync.
 
 ## Known limitations (current)
 
@@ -81,25 +100,26 @@ Frontend production build (`npm run build`, TypeScript + Vite 6.4.6): **succeede
   This SPA does not use SSR hydration; fixing requires a breaking major upgrade to v7, deferred past the
   submission deadline and documented rather than hidden.
 
-## Clean-clone verification (2026-11-16)
+## Clean-clone verification (2026-11-16, commit `896fc14`)
 
-A fresh `git clone` of `main` (tracked files only, ~28 MB including the committed pretrained X-ray weights)
-was verified in a temporary directory using the project `.venv` and Node 24:
+A fresh `git clone --depth 1` of the public repository (tracked files only, including the committed model
+pipelines, model cards, sample cases and the 28.4 MB pretrained X-ray weights) was verified in a temporary
+directory using the project `.venv` and Node 24:
 
-- `pytest tests -q` from `backend/`: **29 passed**, exit 0.
-- `npm ci` then `npm run build` from `frontend/`: build succeeded (one non-blocking chunk-size warning).
-- Backend started with `uvicorn app.main:app`; `/api/health`, `/docs` and `/openapi.json` (31 paths) returned 200.
-- Live end-to-end smoke: register → create profile → `POST /api/predictions/tabular` returned a genuine
-  heart-model score with explanation, and the interpretation quoted the correct cohort prevalence (46.2%).
-  This caught and fixed a bug where the prevalence was read from the wrong level of the model card (0.0%);
-  a regression test now asserts it matches the card.
+- `pytest tests -q` from `backend/`: **29 passed** (24.04 s), exit 0.
+- `npm ci` then `npm run build` from `frontend/`: exit 0, build 7.93 s; `dist/sample_cases.json` present.
+- `seed_demo.py` created the four demo users and the labelled SYNTHETIC profile using the committed models.
+- Backend on a fresh SQLite file: `/api/health`, login, `/api/models` (5 tabular models; heart baseline
+  0.4779, FP 5 / FN 7, subgroups male+female), a real heart prediction (0.9951) and the clinician report
+  markdown all succeeded; the built bundle contains the required disclaimer sentence.
 
 Training is therefore NOT required to run the demo from a clean clone; `download_data.py` / `train_all.py`
-remain available for reproduction.
+remain available for reproduction (measured 52.2 s).
 
 ## Publication (2026-11-16)
 
 - Public repository: https://github.com/Forney2ney/healthsignal — visibility confirmed as PUBLIC via `gh repo view`.
+- Latest verified pushed code commit: `896fc14` (evaluation commit `6c97337`).
 - Public accessibility confirmed with an unauthenticated HTTP fetch of the repository page; the README
   renders correctly (UTF-8, no mojibake) and all required files are present.
 - No `.env`, credentials or private keys are tracked.

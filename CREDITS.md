@@ -21,8 +21,12 @@ not in this file, it was not used.
   which we treat as **missing** (documented conservative choice), not as real zero measurements.
 - **ILPD:** the `selector` column is 1 = liver patient, 2 = not. Mapped to 1/0 accordingly.
 - No identifiable patient data is present anywhere in this repository. The only synthetic profile is created
-  by `backend/scripts/seed_demo.py`, is flagged `is_synthetic=True`, and is labelled "SYnTHETIC DEMO" in the
+  by `backend/scripts/seed_demo.py`, is flagged `is_synthetic=True`, and is labelled "SYNTHETIC DEMO" in the
   UI.
+- The "load positive/negative example row" buttons use real de-identified records from the same public
+  datasets, selected near the dataset median and written to `ml/artifacts/sample_cases.json` (mirrored to
+  `frontend/public/` as a static asset) by `ml/scripts/make_sample_cases.py`. They are dataset records, not
+  synthetic patients and not a real living person.
 
 ## Pretrained models
 
@@ -47,6 +51,7 @@ MIDL 2022.
 | FastAPI / uvicorn / pydantic / SQLAlchemy | Backend | `requirements.txt` |
 | bcrypt / PyJWT | Password hashing and tokens | `requirements.txt` |
 | React / TypeScript / Vite / Tailwind / Recharts | Frontend | `frontend/package.json` |
+| lucide-react | UI icon set | `frontend/package.json` |
 | pytest | Backend tests | `requirements.txt` |
 
 Exact resolved versions are regenerated with `.\.venv\Scripts\python -m pip freeze > requirements-lock.txt`

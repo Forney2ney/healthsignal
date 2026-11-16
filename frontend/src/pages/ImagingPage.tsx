@@ -195,8 +195,8 @@ export default function ImagingPage() {
                   style={{ clipPath: `inset(0 ${100 - reveal}% 0 0)` }}
                 />
                 <div className="pointer-events-none absolute inset-y-0 w-0.5 bg-white/70" style={{ left: `${reveal}%` }} />
-                <span className="pointer-events-none absolute top-2 left-2 text-[10px] bg-black/60 px-2 py-1 rounded-full">original</span>
-                <span className="pointer-events-none absolute top-2 right-2 text-[10px] bg-accent/80 text-ink px-2 py-1 rounded-full">Grad-CAM</span>
+                <span className="pointer-events-none absolute top-2 left-2 text-[10px] bg-accent/80 text-ink px-2 py-1 rounded-full">Grad-CAM</span>
+                <span className="pointer-events-none absolute top-2 right-2 text-[10px] bg-black/60 px-2 py-1 rounded-full">original</span>
               </div>
               <input
                 type="range" min={0} max={100} value={reveal}
