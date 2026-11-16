@@ -1,0 +1,18 @@
+{
+  "model_name": "healthsignal-cxr_nih-v1",
+  "model_type": "torchxrayvision DenseNet-121 (pretrained)",
+  "library": "torchxrayvision==1.5.7",
+  "weights": "nih",
+  "weights_url": "https://github.com/mlmed/torchxrayvision/releases/download/v1/nih-densenet121-d121-tw-lr001-rot45-tr15-sc15-seed0-best.pt",
+  "prediction_task": "Chest X-ray pathology classifier (DenseNet-121, NIH ChestX-ray14 weights)",
+  "training_data": "NIH ChestX-ray14 (112,120 frontal-view chest X-rays, 14 thoracic pathologies)",
+  "published_evaluation": "Per-pathology AUCs were published by the torchxrayvision authors (Cohen et al., 'Torchxrayvision: A library of chest X-ray datasets and models', MIDL 2022). Weights are used as released; we did NOT re-validate them on a held-out set in this project and did not fine-tune them.",
+  "preprocessing": "Input loaded and scaled to roughly [-1024, 1024] gray scale via torchxrayvision.utils.load_image; the model resizes to its trained resolution.",
+  "limitations": [
+    "Trained on frontal chest X-rays; non-CXR images or CT/MRI/ultrasound are invalid inputs.",
+    "Probabilities are uncalibrated and prevalence-dependent; not validated for individual risk.",
+    "Grad-CAM overlays are activation explanations, not diagnostic evidence.",
+    "No local re-validation was performed; metrics quoted are from the original publications."
+  ],
+  "intended_use": "Research and educational demonstration of explainable medical-image analysis."
+}

@@ -61,16 +61,19 @@ Most student health projects demo one model with one accuracy number. Our contri
 
 | Model | ROC-AUC | Baseline (stratified random) | Precision | Recall | Specificity | F1 | PR-AUC | FP / FN | n_test |
 |---|---|---|---|---|---|---|---|---|---|
-| Heart disease | **0.922** | 0.478 | 0.902 | 0.902 | 0.941 | 0.854 | 0.912 | 5 / 7 | 91 |
-| Breast cancer (WDBC) | **0.998** | 0.449 | 0.989 | 0.957 | 0.991 | 0.960 | 0.996 | 1 / 4 | 171 |
-| Chronic kidney disease | **0.961** | 0.522 | 0.975 | 0.960 | 0.957 | 0.959 | 0.984 | 1 / 5 | 120 |
-| Diabetes screening (Pima) | **0.836** | 0.529 | 0.660 | 0.735 | 0.856 | 0.593 | 0.719 | 21 / 38 | 231 |
-| Liver condition (ILPD) | **0.779** | 0.522 | 0.708 | 0.902 | 0.479 | 0.838 | 0.911 | 40 / 6 | 175 |
+| Heart disease | **0.922** | 0.478 | 0.875 | 0.833 | 0.898 | 0.854 | 0.912 | 5 / 7 | 91 |
+| Breast cancer (WDBC) | **0.998** | 0.449 | 0.984 | 0.938 | 0.991 | 0.960 | 0.996 | 1 / 4 | 171 |
+| Chronic kidney disease | **0.961** | 0.522 | 0.986 | 0.933 | 0.978 | 0.959 | 0.984 | 1 / 5 | 120 |
+| Diabetes screening (Pima) | **0.836** | 0.529 | 0.672 | 0.531 | 0.860 | 0.593 | 0.719 | 21 / 38 | 231 |
+| Liver condition (ILPD) | **0.779** | 0.522 | 0.748 | 0.952 | 0.200 | 0.838 | 0.911 | 40 / 6 | 175 |
+
+All figures above are read directly from `ml/artifacts/<task>/model_card.json` (`methodology.held_out_test_metrics` and `baselines_on_same_test_split`), not transcribed by hand.
 
 Interpretation we make explicitly in the report:
 
-- ILPD's high recall (0.902) comes at the cost of **40 false positives** in 175 test records — the model
-  flags many healthy people. That is a screening trade-off, not an achievement, and we say so.
+- ILPD's high recall (0.952) comes at the cost of **40 false positives** in 175 test records and a
+  specificity of only 0.200 — the model flags most healthy people. That is a screening trade-off, not an
+  achievement, and we say so.
 - Pima's ROC-AUC (0.836) is modest while its PR-AUC (0.719) is the more informative figure given the 35/65
   split; 38 false negatives is the clinically costly direction.
 - WDBC and CKD are near-separable datasets; quoting their ROC-AUCs as "99% accurate AI" would be
@@ -82,19 +85,21 @@ Interpretation we make explicitly in the report:
 Failure cases are stored in `ml/artifacts/<task>/model_card.json` under
 `methodology.failure_cases`, with raw feature values.
 
-- **Pima diabetes, 38 false negatives** (recall 0.735): the strongest single predictor is plasma glucose and
+- **Pima diabetes, 38 false negatives** (recall 0.531): the strongest single predictor is plasma glucose and
   the label is a diagnostic threshold outcome; people just below a decision boundary are systematically
   missed. Missing glucose/skinfold/insulin values (physiologically impossible zeros treated as missing)
   further weaken borderline cases.
-- **ILPD liver, 40 false positives** (specificity 0.479): the dataset aggregates many liver conditions into
+- **ILPD liver, 40 false positives** (specificity 0.200): the dataset aggregates many liver conditions into
   one label with modest signal; the model over-flags. With 71% positive prevalence the always-positive
   baseline reaches recall 1.0 with zero false negatives — our model trades FP for less-obvious FN, which is
   why we report FP and FN separately rather than a single accuracy.
 - **Heart, 7 false negatives:** exercise-test features (ST depression, thalassmia category) are the dominant
   contributors; atypical presentations without ST deviation fall below the 0.5 threshold. Threshold choice is
   disclosed rather than tuned on the test split.
-- **Subgroup caveat:** heart reports sensitivity by recorded sex and Pima/CKD by age band; subgroup n is
-  small (~40–90), so we present these for transparency and explicitly forbid reading them as fairness claims.
+- **Subgroup caveat:** subgroups are reported where the processed data carries a demographic attribute —
+  age bands for Pima/CKD and recorded sex for ILPD. Heart and WDBC have no usable demographic subgroup in
+  their processed features, so none is reported. Subgroup n ranges from 42 to 176, so these figures are
+  presented for transparency only and must not be read as fairness claims.
 
 ## What we would do next
 

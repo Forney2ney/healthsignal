@@ -1,0 +1,361 @@
+{
+  "model_name": "healthsignal-ilpd-v1",
+  "model_type": "sklearn Pipeline[logistic_regression]",
+  "created_utc": "2026-11-16T11:31:01+00:00",
+  "prediction_task": "Liver-patient vs not from age, gender and liver function tests",
+  "dataset": {
+    "name": "UCI Indian Liver Patient Records (ILPD)",
+    "source_url": "https://archive.ics.uci.edu/dataset/225/ilpd+indian+liver+patient+dataset",
+    "documented_records": "583",
+    "loaded_rows": 583,
+    "licence": "UCI hosting; collected from Andhra Pradesh, India (Ramana et al.)",
+    "download_requirement": "None: direct zip download, no registration",
+    "known_limitations": [
+      "Class imbalance (416 liver patients vs 167) requires PR-AUC reporting",
+      "Aggregates many liver conditions into a single 'liver patient' label",
+      "Age range is skewed (441 of 583 are male, age skew) \u2014 population bias"
+    ]
+  },
+  "target": "target",
+  "class_balance": {
+    "positive_rate_all_data": 0.7136,
+    "positive_rate_train": 0.7132,
+    "positive_rate_test": 0.7143,
+    "note": "Stratified split keeps proportions comparable; imbalance is reported, not fixed."
+  },
+  "features_provided": {
+    "numeric": [
+      "age",
+      "tb",
+      "db",
+      "alkphos",
+      "sgpt",
+      "sgot",
+      "tp",
+      "albumin",
+      "ag_ratio"
+    ],
+    "categorical": [
+      "gender"
+    ]
+  },
+  "engineered_features": [
+    "num__age",
+    "num__tb",
+    "num__db",
+    "num__alkphos",
+    "num__sgpt",
+    "num__sgot",
+    "num__tp",
+    "num__albumin",
+    "num__ag_ratio",
+    "cat__gender_Female",
+    "cat__gender_Male"
+  ],
+  "methodology": {
+    "split": "stratified 70/30, seed 42; test split touched once, after model selection",
+    "model_selection": [
+      {
+        "model": "logistic_regression",
+        "cv_roc_auc_mean": 0.7324077368095613,
+        "cv_roc_auc_std": 0.03659795887822904,
+        "cv_pr_auc_mean": 0.8865031287689806
+      },
+      {
+        "model": "random_forest",
+        "cv_roc_auc_mean": 0.7042455467181664,
+        "cv_roc_auc_std": 0.037020379709080314,
+        "cv_pr_auc_mean": 0.8643085283492363
+      },
+      {
+        "model": "hist_gradient_boosting",
+        "cv_roc_auc_mean": 0.701136931534233,
+        "cv_roc_auc_std": 0.02861740857524348,
+        "cv_pr_auc_mean": 0.8594026398051853
+      },
+      {
+        "model": "lightgbm",
+        "cv_roc_auc_mean": 0.6928478557331503,
+        "cv_roc_auc_std": 0.022940254259947886,
+        "cv_pr_auc_mean": 0.8486255194302063
+      }
+    ],
+    "selected_model": "logistic_regression",
+    "selection_rule": "highest mean ROC-AUC in 5-fold stratified CV on the train split",
+    "preprocessing": "median imputation + standard scaling for numeric columns; most-frequent imputation + one-hot encoding for categorical columns; all inside the pipeline, refitted inside every CV fold (no leakage)",
+    "held_out_test_metrics": {
+      "n": 175,
+      "accuracy": 0.7371428571428571,
+      "balanced_accuracy": 0.576,
+      "precision": 0.7484276729559748,
+      "recall_sensitivity": 0.952,
+      "specificity": 0.2,
+      "f1": 0.8380281690140845,
+      "roc_auc": 0.77936,
+      "pr_auc": 0.9108016768171858,
+      "brier": 0.16652316906135337,
+      "confusion_matrix": {
+        "true_negative": 10,
+        "false_positive": 40,
+        "false_negative": 6,
+        "true_positive": 119
+      },
+      "false_positives": 40,
+      "false_negatives": 6
+    },
+    "baselines_on_same_test_split": {
+      "baseline_stratified_random": {
+        "roc_auc": 0.522,
+        "pr_auc": 0.7234196428571428,
+        "f1": 0.7351778656126482,
+        "recall": 0.744,
+        "specificity": 0.3,
+        "false_positives": 35,
+        "false_negatives": 32,
+        "note": "DummyClassifier: no learning from features, only class rates"
+      },
+      "baseline_most_frequent": {
+        "roc_auc": 0.5,
+        "pr_auc": 0.7142857142857143,
+        "f1": 0.8333333333333334,
+        "recall": 1.0,
+        "specificity": 0.0,
+        "false_positives": 50,
+        "false_negatives": 0,
+        "note": "DummyClassifier: no learning from features, only class rates"
+      }
+    },
+    "subgroup_performance": {
+      "male": {
+        "n": 133,
+        "roc_auc": 0.8306122448979594,
+        "recall_sensitivity": 0.9693877551020408,
+        "specificity": 0.17142857142857143,
+        "false_negatives": 3,
+        "false_positives": 29,
+        "positive_rate": 0.7368421052631579
+      },
+      "female": {
+        "n": 42,
+        "roc_auc": 0.6148148148148148,
+        "recall_sensitivity": 0.8888888888888888,
+        "specificity": 0.26666666666666666,
+        "false_negatives": 3,
+        "false_positives": 11,
+        "positive_rate": 0.6428571428571429
+      },
+      "_interpretation_note": "Small subgroup sizes mean wide uncertainty; these figures are reported for transparency and MUST NOT be used to claim the model is fair."
+    },
+    "failure_cases": {
+      "false_negatives": [
+        {
+          "model_probability": 0.4759,
+          "true_label": 1,
+          "features": {
+            "age": 31,
+            "gender": "Male",
+            "tb": 0.6,
+            "db": 0.1,
+            "alkphos": 175,
+            "sgpt": 48,
+            "sgot": 34,
+            "tp": 6.0,
+            "albumin": 3.7,
+            "ag_ratio": 1.6
+          }
+        },
+        {
+          "model_probability": 0.432,
+          "true_label": 1,
+          "features": {
+            "age": 21,
+            "gender": "Female",
+            "tb": 0.6,
+            "db": 0.1,
+            "alkphos": 186,
+            "sgpt": 25,
+            "sgot": 22,
+            "tp": 6.8,
+            "albumin": 3.4,
+            "ag_ratio": 1.0
+          }
+        },
+        {
+          "model_probability": 0.3911,
+          "true_label": 1,
+          "features": {
+            "age": 30,
+            "gender": "Female",
+            "tb": 0.7,
+            "db": 0.2,
+            "alkphos": 63,
+            "sgpt": 31,
+            "sgot": 27,
+            "tp": 5.8,
+            "albumin": 3.4,
+            "ag_ratio": 1.4
+          }
+        },
+        {
+          "model_probability": 0.4695,
+          "true_label": 1,
+          "features": {
+            "age": 34,
+            "gender": "Female",
+            "tb": 0.6,
+            "db": 0.1,
+            "alkphos": 161,
+            "sgpt": 15,
+            "sgot": 19,
+            "tp": 6.6,
+            "albumin": 3.4,
+            "ag_ratio": 1.0
+          }
+        },
+        {
+          "model_probability": 0.4759,
+          "true_label": 1,
+          "features": {
+            "age": 31,
+            "gender": "Male",
+            "tb": 0.6,
+            "db": 0.1,
+            "alkphos": 175,
+            "sgpt": 48,
+            "sgot": 34,
+            "tp": 6.0,
+            "albumin": 3.7,
+            "ag_ratio": 1.6
+          }
+        }
+      ],
+      "false_positives": [
+        {
+          "model_probability": 0.7707,
+          "true_label": 0,
+          "features": {
+            "age": 65,
+            "gender": "Male",
+            "tb": 1.1,
+            "db": 0.3,
+            "alkphos": 258,
+            "sgpt": 48,
+            "sgot": 40,
+            "tp": 7.0,
+            "albumin": 3.9,
+            "ag_ratio": 1.2
+          }
+        },
+        {
+          "model_probability": 0.7331,
+          "true_label": 0,
+          "features": {
+            "age": 35,
+            "gender": "Male",
+            "tb": 1.8,
+            "db": 0.6,
+            "alkphos": 275,
+            "sgpt": 48,
+            "sgot": 178,
+            "tp": 6.5,
+            "albumin": 3.2,
+            "ag_ratio": 0.9
+          }
+        },
+        {
+          "model_probability": 0.5431,
+          "true_label": 0,
+          "features": {
+            "age": 38,
+            "gender": "Male",
+            "tb": 1.0,
+            "db": 0.3,
+            "alkphos": 216,
+            "sgpt": 21,
+            "sgot": 24,
+            "tp": 7.3,
+            "albumin": 4.4,
+            "ag_ratio": 1.5
+          }
+        },
+        {
+          "model_probability": 0.5787,
+          "true_label": 0,
+          "features": {
+            "age": 50,
+            "gender": "Male",
+            "tb": 1.1,
+            "db": 0.3,
+            "alkphos": 175,
+            "sgpt": 20,
+            "sgot": 19,
+            "tp": 7.1,
+            "albumin": 4.5,
+            "ag_ratio": 1.7
+          }
+        },
+        {
+          "model_probability": 0.7125,
+          "true_label": 0,
+          "features": {
+            "age": 60,
+            "gender": "Male",
+            "tb": 0.7,
+            "db": 0.2,
+            "alkphos": 171,
+            "sgpt": 31,
+            "sgot": 26,
+            "tp": 7.0,
+            "albumin": 3.5,
+            "ag_ratio": 1.0
+          }
+        }
+      ],
+      "_note": "Held-out test records the selected model got wrong, with the raw dataset feature values (null = genuinely missing in the source)."
+    },
+    "linear_explanation_baseline": {
+      "note": "train-split means of transformed features, for exact linear SHAP",
+      "feature_names": [
+        "num__age",
+        "num__tb",
+        "num__db",
+        "num__alkphos",
+        "num__sgpt",
+        "num__sgot",
+        "num__tp",
+        "num__albumin",
+        "num__ag_ratio",
+        "cat__gender_Female",
+        "cat__gender_Male"
+      ],
+      "feature_means": [
+        2.3102434997714656e-16,
+        6.442286791176614e-17,
+        4.387829968647218e-17,
+        7.26543008762051e-17,
+        -2.789163235884278e-18,
+        -3.183727791204493e-17,
+        7.170190367370803e-17,
+        3.9578906600913975e-16,
+        -3.2136602747115437e-16,
+        0.24509803921568626,
+        0.7549019607843137
+      ]
+    }
+  },
+  "environment": {
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "numpy": "2.5.4",
+    "pandas": "3.1.1"
+  },
+  "intended_use": "Research and educational risk-indicator prototype. Output is a dataset-specific statistical indicator, NOT a validated individual probability of disease and NOT a diagnosis. This project is a prototype and is not medical advice.",
+  "limitations": [
+    "Class imbalance (416 liver patients vs 167) requires PR-AUC reporting",
+    "Aggregates many liver conditions into a single 'liver patient' label",
+    "Age range is skewed (441 of 583 are male, age skew) \u2014 population bias",
+    "No external validation: all metrics apply to this cohort only.",
+    "Small datasets make confidence intervals wide.",
+    "Baseline comparison uses the same split; a stratified-random baseline already obtains non-trivial scores, so ROC-AUC must be read against it."
+  ]
+}

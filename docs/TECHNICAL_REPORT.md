@@ -67,17 +67,20 @@ NIH sample X-rays shipped with the torchxrayvision repository are used for the d
 
 | Model | Selected | ROC-AUC | PR-AUC | F1 | Recall | Specificity | Brier |
 |---|---|---|---|---|---|---|---|
-| heart | logistic_regression | 0.9223 | 0.9116 | 0.8537 | 0.902 | 0.941 | see card |
-| wdbc | logistic_regression | 0.9975 | 0.9963 | 0.9600 | 0.957 | 0.991 | see card |
-| ckd | logistic_regression | 0.9606 | 0.9836 | 0.9589 | 0.960 | 0.957 | see card |
-| pima | logistic_regression | 0.8363 | 0.7193 | 0.5931 | 0.735 | 0.856 | see card |
-| ilpd | logistic_regression | 0.7794 | 0.9108 | 0.8380 | 0.902 | 0.479 | see card |
+| heart | logistic_regression | 0.9223 | 0.9116 | 0.8537 | 0.833 | 0.898 | see card |
+| wdbc | logistic_regression | 0.9975 | 0.9963 | 0.9600 | 0.938 | 0.991 | see card |
+| ckd | logistic_regression | 0.9606 | 0.9836 | 0.9589 | 0.933 | 0.978 | see card |
+| pima | logistic_regression | 0.8363 | 0.7193 | 0.5931 | 0.531 | 0.860 | see card |
+| ilpd | logistic_regression | 0.7794 | 0.9108 | 0.8380 | 0.952 | 0.200 | see card |
+
+These figures are generated from `ml/artifacts/<task>/model_card.json`; the exact values and per-task
+baselines, confusion matrices and failure cases live there.
 
 Reading notes a judge should apply:
 
 - These datasets are small and easy; WDBC and CKD approach separability and should not be quoted as
   generalisable performance. Pima's PR-AUC (0.72) is the more informative metric than its ROC-AUC.
-- ILPD's specificity of 0.479 reflects the 71:29 class imbalance; recall is prioritised by none of the
+- ILPD's specificity of 0.200 reflects the 71:29 class imbalance; recall is prioritised by none of the
   configuration choices, it simply falls out of the data. No class re-weighting was tuned (that would be model
   selection on the test split).
 - Logistic regression won CV selection in all five cases — appropriate for datasets of this size; the CV tables

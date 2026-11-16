@@ -1,0 +1,329 @@
+{
+  "model_name": "healthsignal-pima-v1",
+  "model_type": "sklearn Pipeline[logistic_regression]",
+  "created_utc": "2026-11-16T11:30:54+00:00",
+  "prediction_task": "Screening classifier for type-2 diabetes test outcome from 8 measurements",
+  "dataset": {
+    "name": "Pima Indians Diabetes (original NIDDK data, public mirror)",
+    "source_url": "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv",
+    "documented_records": "768",
+    "loaded_rows": 768,
+    "licence": "Original 1988 NIDDK dataset hosted publicly; widely used in teaching/research",
+    "download_requirement": "None: direct CSV via a well-known public GitHub dataset mirror",
+    "known_limitations": [
+      "Women of Pima heritage only; not representative of other populations",
+      "Physiologically impossible zeros (glucose, bp, skinfold, insulin, BMI) are treated as missing here, which is a documented conservative choice",
+      "Screening outcome only \u2014 not a clinical diagnosis of diabetes"
+    ]
+  },
+  "target": "target",
+  "class_balance": {
+    "positive_rate_all_data": 0.349,
+    "positive_rate_train": 0.3482,
+    "positive_rate_test": 0.3506,
+    "note": "Stratified split keeps proportions comparable; imbalance is reported, not fixed."
+  },
+  "features_provided": {
+    "numeric": [
+      "pregnancies",
+      "glucose",
+      "bloodpressure",
+      "skinfold",
+      "insulin",
+      "bmi",
+      "pedigree",
+      "age"
+    ],
+    "categorical": []
+  },
+  "engineered_features": [
+    "num__pregnancies",
+    "num__glucose",
+    "num__bloodpressure",
+    "num__skinfold",
+    "num__insulin",
+    "num__bmi",
+    "num__pedigree",
+    "num__age"
+  ],
+  "methodology": {
+    "split": "stratified 70/30, seed 42; test split touched once, after model selection",
+    "model_selection": [
+      {
+        "model": "logistic_regression",
+        "cv_roc_auc_mean": 0.8368441373704532,
+        "cv_roc_auc_std": 0.03156551769728376,
+        "cv_pr_auc_mean": 0.740279573241929
+      },
+      {
+        "model": "random_forest",
+        "cv_roc_auc_mean": 0.8301361511887828,
+        "cv_roc_auc_std": 0.04282352763808549,
+        "cv_pr_auc_mean": 0.724508204085853
+      },
+      {
+        "model": "hist_gradient_boosting",
+        "cv_roc_auc_mean": 0.7995061979272505,
+        "cv_roc_auc_std": 0.04919394811632207,
+        "cv_pr_auc_mean": 0.6512007716651673
+      },
+      {
+        "model": "lightgbm",
+        "cv_roc_auc_mean": 0.7859174964438121,
+        "cv_roc_auc_std": 0.04879814806828501,
+        "cv_pr_auc_mean": 0.6575597946150378
+      }
+    ],
+    "selected_model": "logistic_regression",
+    "selection_rule": "highest mean ROC-AUC in 5-fold stratified CV on the train split",
+    "preprocessing": "median imputation + standard scaling for numeric columns; most-frequent imputation + one-hot encoding for categorical columns; all inside the pipeline, refitted inside every CV fold (no leakage)",
+    "held_out_test_metrics": {
+      "n": 231,
+      "accuracy": 0.7445887445887446,
+      "balanced_accuracy": 0.6954320987654321,
+      "precision": 0.671875,
+      "recall_sensitivity": 0.5308641975308642,
+      "specificity": 0.86,
+      "f1": 0.593103448275862,
+      "roc_auc": 0.8362962962962962,
+      "pr_auc": 0.71934981527981,
+      "brier": 0.1632712815817779,
+      "confusion_matrix": {
+        "true_negative": 129,
+        "false_positive": 21,
+        "false_negative": 38,
+        "true_positive": 43
+      },
+      "false_positives": 21,
+      "false_negatives": 38
+    },
+    "baselines_on_same_test_split": {
+      "baseline_stratified_random": {
+        "roc_auc": 0.5285185185185185,
+        "pr_auc": 0.3650793650793651,
+        "f1": 0.379746835443038,
+        "recall": 0.37037037037037035,
+        "specificity": 0.6866666666666666,
+        "false_positives": 47,
+        "false_negatives": 51,
+        "note": "DummyClassifier: no learning from features, only class rates"
+      },
+      "baseline_most_frequent": {
+        "roc_auc": 0.5,
+        "pr_auc": 0.35064935064935066,
+        "f1": 0.0,
+        "recall": 0.0,
+        "specificity": 1.0,
+        "false_positives": 0,
+        "false_negatives": 81,
+        "note": "DummyClassifier: no learning from features, only class rates"
+      }
+    },
+    "subgroup_performance": {
+      "age<40": {
+        "n": 176,
+        "roc_auc": 0.8407731247123792,
+        "recall_sensitivity": 0.4339622641509434,
+        "specificity": 0.9105691056910569,
+        "false_negatives": 30,
+        "false_positives": 11,
+        "positive_rate": 0.30113636363636365
+      },
+      "age>=40": {
+        "n": 55,
+        "roc_auc": 0.7685185185185185,
+        "recall_sensitivity": 0.7142857142857143,
+        "specificity": 0.6296296296296297,
+        "false_negatives": 8,
+        "false_positives": 10,
+        "positive_rate": 0.509090909090909
+      },
+      "_interpretation_note": "Small subgroup sizes mean wide uncertainty; these figures are reported for transparency and MUST NOT be used to claim the model is fair."
+    },
+    "failure_cases": {
+      "false_negatives": [
+        {
+          "model_probability": 0.2405,
+          "true_label": 1,
+          "features": {
+            "pregnancies": 3.0,
+            "glucose": 130.0,
+            "bloodpressure": 78.0,
+            "skinfold": 23.0,
+            "insulin": 79.0,
+            "bmi": 28.4,
+            "pedigree": 0.323,
+            "age": 34.0
+          }
+        },
+        {
+          "model_probability": 0.2703,
+          "true_label": 1,
+          "features": {
+            "pregnancies": 4.0,
+            "glucose": 109.0,
+            "bloodpressure": 64.0,
+            "skinfold": 44.0,
+            "insulin": 99.0,
+            "bmi": 34.8,
+            "pedigree": 0.905,
+            "age": 26.0
+          }
+        },
+        {
+          "model_probability": 0.4804,
+          "true_label": 1,
+          "features": {
+            "pregnancies": 0.0,
+            "glucose": 131.0,
+            "bloodpressure": null,
+            "skinfold": null,
+            "insulin": null,
+            "bmi": 43.2,
+            "pedigree": 0.27,
+            "age": 26.0
+          }
+        },
+        {
+          "model_probability": 0.2604,
+          "true_label": 1,
+          "features": {
+            "pregnancies": 0.0,
+            "glucose": 131.0,
+            "bloodpressure": 88.0,
+            "skinfold": null,
+            "insulin": null,
+            "bmi": 31.6,
+            "pedigree": 0.743,
+            "age": 32.0
+          }
+        },
+        {
+          "model_probability": 0.3204,
+          "true_label": 1,
+          "features": {
+            "pregnancies": 3.0,
+            "glucose": 128.0,
+            "bloodpressure": 72.0,
+            "skinfold": 25.0,
+            "insulin": 190.0,
+            "bmi": 32.4,
+            "pedigree": 0.549,
+            "age": 27.0
+          }
+        }
+      ],
+      "false_positives": [
+        {
+          "model_probability": 0.7146,
+          "true_label": 0,
+          "features": {
+            "pregnancies": 10.0,
+            "glucose": 162.0,
+            "bloodpressure": 84.0,
+            "skinfold": null,
+            "insulin": null,
+            "bmi": 27.7,
+            "pedigree": 0.182,
+            "age": 54.0
+          }
+        },
+        {
+          "model_probability": 0.8734,
+          "true_label": 0,
+          "features": {
+            "pregnancies": 0.0,
+            "glucose": 165.0,
+            "bloodpressure": 90.0,
+            "skinfold": 33.0,
+            "insulin": 680.0,
+            "bmi": 52.3,
+            "pedigree": 0.427,
+            "age": 23.0
+          }
+        },
+        {
+          "model_probability": 0.8153,
+          "true_label": 0,
+          "features": {
+            "pregnancies": 0.0,
+            "glucose": 165.0,
+            "bloodpressure": 76.0,
+            "skinfold": 43.0,
+            "insulin": 255.0,
+            "bmi": 47.9,
+            "pedigree": 0.259,
+            "age": 26.0
+          }
+        },
+        {
+          "model_probability": 0.8624,
+          "true_label": 0,
+          "features": {
+            "pregnancies": 7.0,
+            "glucose": 179.0,
+            "bloodpressure": 95.0,
+            "skinfold": 31.0,
+            "insulin": null,
+            "bmi": 34.2,
+            "pedigree": 0.164,
+            "age": 60.0
+          }
+        },
+        {
+          "model_probability": 0.8187,
+          "true_label": 0,
+          "features": {
+            "pregnancies": 3.0,
+            "glucose": 191.0,
+            "bloodpressure": 68.0,
+            "skinfold": 15.0,
+            "insulin": 130.0,
+            "bmi": 30.9,
+            "pedigree": 0.299,
+            "age": 34.0
+          }
+        }
+      ],
+      "_note": "Held-out test records the selected model got wrong, with the raw dataset feature values (null = genuinely missing in the source)."
+    },
+    "linear_explanation_baseline": {
+      "note": "train-split means of transformed features, for exact linear SHAP",
+      "feature_names": [
+        "num__pregnancies",
+        "num__glucose",
+        "num__bloodpressure",
+        "num__skinfold",
+        "num__insulin",
+        "num__bmi",
+        "num__pedigree",
+        "num__age"
+      ],
+      "feature_means": [
+        2.3155489526632688e-17,
+        1.9847562451399447e-17,
+        -2.6132623894342607e-16,
+        1.9020580682591136e-16,
+        1.3231708300932965e-16,
+        -4.366463739307878e-16,
+        1.1908537470839668e-16,
+        -2.1170733281492743e-16
+      ]
+    }
+  },
+  "environment": {
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "numpy": "2.5.4",
+    "pandas": "3.1.1"
+  },
+  "intended_use": "Research and educational risk-indicator prototype. Output is a dataset-specific statistical indicator, NOT a validated individual probability of disease and NOT a diagnosis. This project is a prototype and is not medical advice.",
+  "limitations": [
+    "Women of Pima heritage only; not representative of other populations",
+    "Physiologically impossible zeros (glucose, bp, skinfold, insulin, BMI) are treated as missing here, which is a documented conservative choice",
+    "Screening outcome only \u2014 not a clinical diagnosis of diabetes",
+    "No external validation: all metrics apply to this cohort only.",
+    "Small datasets make confidence intervals wide.",
+    "Baseline comparison uses the same split; a stratified-random baseline already obtains non-trivial scores, so ROC-AUC must be read against it."
+  ]
+}

@@ -4,7 +4,7 @@ Status classes: IMPLEMENTED AND TESTED / IMPLEMENTED BUT NOT FULLY TESTED / PART
 SIMULATED FOR DEMONSTRATION / PLANNED / BLOCKED.
 Only results that were actually observed may be marked tested. Nothing here may be fabricated.
 
-_Last updated: after the official Veritas requirements audit (Phase 6)._
+_Last updated: 2026-11-16 — submission-readiness pass (test fixes, metric reconciliation, clean-clone reproducibility)._
 
 ## Heads-up status (audit summary)
 
@@ -27,11 +27,11 @@ Held-out 30% test split. Baseline = `DummyClassifier(stratified)` on the same sp
 
 | Model | Task | Dataset | ROC-AUC (baseline) | PR-AUC | F1 | Recall | Specificity | FP / FN | Status |
 |---|---|---|---|---|---|---|---|---|---|
-| heart | Heart-disease indicator | UCI 303×13 | 0.922 (0.478) | 0.912 | 0.854 | 0.902 | 0.941 | 5 / 7 | IMPLEMENTED AND TESTED |
-| wdbc | Malignancy | UCI 569×30 | 0.998 (0.449) | 0.996 | 0.960 | 0.957 | 0.991 | 1 / 4 | IMPLEMENTED AND TESTED |
-| ckd | CKD indicator | UCI 399×24 | 0.961 (0.522) | 0.984 | 0.959 | 0.960 | 0.957 | 1 / 5 | IMPLEMENTED AND TESTED |
-| pima | Diabetes screening | Pima 768×8 | 0.836 (0.529) | 0.719 | 0.593 | 0.735 | 0.856 | 21 / 38 | IMPLEMENTED AND TESTED |
-| ilpd | Liver condition | UCI 583×10 | 0.779 (0.522) | 0.911 | 0.838 | 0.902 | 0.479 | 40 / 6 | IMPLEMENTED AND TESTED |
+| heart | Heart-disease indicator | UCI 303×13 | 0.922 (0.478) | 0.912 | 0.854 | 0.833 | 0.898 | 5 / 7 | IMPLEMENTED AND TESTED |
+| wdbc | Malignancy | UCI 569×30 | 0.998 (0.449) | 0.996 | 0.960 | 0.938 | 0.991 | 1 / 4 | IMPLEMENTED AND TESTED |
+| ckd | CKD indicator | UCI 399×24 | 0.961 (0.522) | 0.984 | 0.959 | 0.933 | 0.978 | 1 / 5 | IMPLEMENTED AND TESTED |
+| pima | Diabetes screening | Pima 768×8 | 0.836 (0.529) | 0.719 | 0.593 | 0.531 | 0.860 | 21 / 38 | IMPLEMENTED AND TESTED |
+| ilpd | Liver condition | UCI 583×10 | 0.779 (0.522) | 0.911 | 0.838 | 0.952 | 0.200 | 40 / 6 | IMPLEMENTED AND TESTED |
 | cxr_nih | 14-pathology thoracic | Pretrained DenseNet-121 (NIH ChestX-ray14) | published AUCs quoted in card; NOT re-validated locally | — | — | — | — | — | PARTIALLY IMPLEMENTED (inference + Grad-CAM work; no local re-validation) |
 
 All five tabular cards now additionally contain: CV selection table, two baselines, confusion matrix,
@@ -57,10 +57,12 @@ See `ml/artifacts/<task>/model_card.json`.
 
 ## Test suite status
 
-Latest observed full-suite run: **27 passed, 2 failed** (both assertion-level, fixed afterwards):
-`test_permissions.py::test_patient_cannot_read_other_profiles` (assertion detail widened) and
-`test_reports.py::test_report_generation_and_markdown` (expected heading text). A confirming full run
-is pending and its result will be recorded here verbatim.
+Latest observed full-suite run (2026-11-16, project `.venv`, `pytest tests -q`): **29 passed, 0 failed**,
+exit code 0. Both previously failing tests were fixed:
+`test_reports.py::test_report_generation_and_markdown` (expected heading text) and
+`test_permissions.py::test_patient_cannot_read_other_profiles`, whose duplicate import of
+`tests.conftest` reset `app.dependency_overrides[get_db]` to the fallback database and produced a 401.
+The test now creates its helper user locally instead of re-importing conftest.
 
 ## Known limitations (current)
 

@@ -62,26 +62,32 @@ work and are not claimed as present functionality.
 
 ## Installation
 
+Trained models, model cards, the 28 MB pretrained chest X-ray weights, sample cases and sample X-rays are
+**committed to the repository**, so a clean clone can run the full demo without retraining or re-downloading
+weights. The steps below marked *optional* are only needed to reproduce training or refresh the public data.
+
 ```powershell
 # from the repository root
 python -m venv .venv
-.\.venv\Scripts\python -m pip install -r requirements.txt
+.\.venv\Scripts\python -m pip install -r requirements-lock.txt   # exact resolved versions
+# (or: pip install -r requirements.txt for compatible ranges)
 
-# download + validate every dataset (writes ml/data/manifest.json)
+# optional: re-download + validate public datasets (overwrites ml/data/manifest.json)
 .\.venv\Scripts\python ml\scripts\download_data.py
 
-# train the tabular models and write model cards (takes a few minutes; CPU)
+# optional: retrain tabular models and regenerate model cards (~2 min, CPU)
 .\.venv\Scripts\python ml\scripts\train_all.py
+.\.venv\Scripts\python ml\scripts\run_full_evaluation.py   # baselines, FP/FN, failures, subgroups
 
-# pick the public-dataset example rows used by the UI
+# optional: refresh the public-dataset example rows / sample X-rays
 .\.venv\Scripts\python ml\scripts\make_sample_cases.py
-
-# fetch two public-domain NIH sample X-rays for the imaging demo
 .\.venv\Scripts\python ml\scripts\fetch_samples.py
 
-# copy frontend/.env.example style config: copy .env.example .env and edit
+# local config (optional for the demo; never commit .env)
 Copy-Item .env.example .env
 ```
+
+The frontend needs its own packages once: `cd frontend; npm install`.
 
 ## Run the application
 

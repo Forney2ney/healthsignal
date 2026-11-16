@@ -206,6 +206,8 @@ def predict(key: str, values: dict[str, Any]) -> dict:
 
     card_m = handle.card.get("methodology", {})
     metrics = card_m.get("held_out_test_metrics") or card_m.get("final_metrics_on_held_out_test", {})
+    test_prevalence = card_m.get("class_balance", {}).get("positive_rate_test", 0.0)
+    n_test = metrics.get("n_test") or metrics.get("n")
     return {
         "model_key": key,
         "model_name": handle.card["model_name"],
@@ -225,11 +227,11 @@ def predict(key: str, values: dict[str, Any]) -> dict:
             "f1": metrics["f1"],
             "brier": metrics["brier"],
             "confusion_matrix": metrics["confusion_matrix"],
-            "n_test": metrics["n_test"],
-            "test_prevalence": metrics["positive_class_prevalence_test"],
+            "n_test": n_test,
+            "test_prevalence": test_prevalence,
         },
         "interpretation": (
-            f"Model score {proba:.1%} on a cohort where {metrics['positive_class_prevalence_test']:.1%} "
+            f"Model score {proba:.1%} on a cohort where {test_prevalence:.1%} "
             "of test cases were positive. This is a statistical indicator from a research model, "
             "NOT a clinically validated probability and NOT a diagnosis."
         ),

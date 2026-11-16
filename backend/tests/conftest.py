@@ -54,7 +54,9 @@ def db(tmp_path):
     app.dependency_overrides[get_db] = _override
     session = TestSession()
     yield session
-    session.rollback()
+    # Commit before closing: the request session is a separate connection and
+    # cannot read rows the fixture session has not committed.
+    session.commit()
     session.close()
     app.dependency_overrides[get_db] = _fallback_db
     engine.dispose()

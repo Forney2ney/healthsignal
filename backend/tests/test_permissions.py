@@ -2,10 +2,29 @@ def auth(token: str) -> dict:
     return {"Authorization": f"Bearer {token}"}
 
 
-def test_patient_cannot_read_other_profiles(client, db, patient_token):
-    from tests.conftest import make_user
+def _make_user(db, email: str, role: str):
+    """Create a user in the test database without re-importing conftest.
 
-    other = make_user(db, "other@test.dev", "patient")
+    Importing ``tests.conftest`` here would re-execute that module and reset
+    ``app.dependency_overrides[get_db]`` to the fallback database, so requests
+    would no longer see the per-test database.
+    """
+    from app.models import User
+    from app.security import hash_password
+
+    u = User(
+        email=email,
+        full_name=email.split("@")[0],
+        hashed_password=hash_password("test-password-123"),
+        role=role,
+    )
+    db.add(u)
+    db.flush()
+    return u
+
+
+def test_patient_cannot_read_other_profiles(client, db, patient_token):
+    other = _make_user(db, "other@test.dev", "patient")
     db.commit()
     from app.models import PatientProfile
 

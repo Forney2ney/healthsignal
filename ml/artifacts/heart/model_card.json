@@ -1,0 +1,436 @@
+{
+  "model_name": "healthsignal-heart-v1",
+  "model_type": "sklearn Pipeline[logistic_regression]",
+  "created_utc": "2026-11-16T11:30:35+00:00",
+  "prediction_task": "Binary indicator of angiographic heart disease (num>0) from clinical measurements",
+  "dataset": {
+    "name": "UCI Heart Disease (Cleveland, processed)",
+    "source_url": "https://archive.ics.uci.edu/dataset/45/heart+disease",
+    "documented_records": "303",
+    "loaded_rows": 303,
+    "licence": "UCI Machine Learning Repository hosting; dataset from the 1988 Hungarian/Statlog heart-disease research (public research dataset)",
+    "download_requirement": "None: direct zip download, no registration",
+    "known_limitations": [
+      "Small sample (303) from a single Cleveland region cohort",
+      "1988 vintage: measurement protocols differ from current practice",
+      "Missing values encoded as '?' in ca/thal/slack; treated as unknown, not zero",
+      "Not a contemporary externally validated cohort; metrics are dataset-specific"
+    ]
+  },
+  "target": "target",
+  "class_balance": {
+    "positive_rate_all_data": 0.4587,
+    "positive_rate_train": 0.4575,
+    "positive_rate_test": 0.4615,
+    "note": "Stratified split keeps proportions comparable; imbalance is reported, not fixed."
+  },
+  "features_provided": {
+    "numeric": [
+      "age",
+      "sex",
+      "cp",
+      "trestbps",
+      "chol",
+      "fbs",
+      "restecg",
+      "thalach",
+      "exang",
+      "oldpeak",
+      "slope",
+      "ca",
+      "thal"
+    ],
+    "categorical": [
+      "sex",
+      "cp",
+      "fbs",
+      "restecg",
+      "exang",
+      "slope"
+    ]
+  },
+  "engineered_features": [
+    "num__age",
+    "num__sex",
+    "num__cp",
+    "num__trestbps",
+    "num__chol",
+    "num__fbs",
+    "num__restecg",
+    "num__thalach",
+    "num__exang",
+    "num__oldpeak",
+    "num__slope",
+    "num__ca",
+    "num__thal",
+    "cat__sex_0.0",
+    "cat__sex_1.0",
+    "cat__cp_1.0",
+    "cat__cp_2.0",
+    "cat__cp_3.0",
+    "cat__cp_4.0",
+    "cat__fbs_0.0",
+    "cat__fbs_1.0",
+    "cat__restecg_0.0",
+    "cat__restecg_1.0",
+    "cat__restecg_2.0",
+    "cat__exang_0.0",
+    "cat__exang_1.0",
+    "cat__slope_1.0",
+    "cat__slope_2.0",
+    "cat__slope_3.0"
+  ],
+  "methodology": {
+    "split": "stratified 70/30, seed 42; test split touched once, after model selection",
+    "model_selection": [
+      {
+        "model": "logistic_regression",
+        "cv_roc_auc_mean": 0.9007780320366132,
+        "cv_roc_auc_std": 0.03131070365175215,
+        "cv_pr_auc_mean": 0.891446242404465
+      },
+      {
+        "model": "random_forest",
+        "cv_roc_auc_mean": 0.8977574370709382,
+        "cv_roc_auc_std": 0.03370753657074982,
+        "cv_pr_auc_mean": 0.8942763439376838
+      },
+      {
+        "model": "hist_gradient_boosting",
+        "cv_roc_auc_mean": 0.8841189931350115,
+        "cv_roc_auc_std": 0.043798854160846994,
+        "cv_pr_auc_mean": 0.8801675464001513
+      },
+      {
+        "model": "lightgbm",
+        "cv_roc_auc_mean": 0.8736613272311213,
+        "cv_roc_auc_std": 0.04606017960515549,
+        "cv_pr_auc_mean": 0.8768331252893169
+      }
+    ],
+    "selected_model": "logistic_regression",
+    "selection_rule": "highest mean ROC-AUC in 5-fold stratified CV on the train split",
+    "preprocessing": "median imputation + standard scaling for numeric columns; most-frequent imputation + one-hot encoding for categorical columns; all inside the pipeline, refitted inside every CV fold (no leakage)",
+    "held_out_test_metrics": {
+      "n": 91,
+      "accuracy": 0.8681318681318682,
+      "balanced_accuracy": 0.8656462585034014,
+      "precision": 0.875,
+      "recall_sensitivity": 0.8333333333333334,
+      "specificity": 0.8979591836734694,
+      "f1": 0.8536585365853658,
+      "roc_auc": 0.9222546161321671,
+      "pr_auc": 0.9116218597179108,
+      "brier": 0.11021927565053838,
+      "confusion_matrix": {
+        "true_negative": 44,
+        "false_positive": 5,
+        "false_negative": 7,
+        "true_positive": 35
+      },
+      "false_positives": 5,
+      "false_negatives": 7
+    },
+    "baselines_on_same_test_split": {
+      "baseline_stratified_random": {
+        "roc_auc": 0.47789115646258495,
+        "pr_auc": 0.4511599511599512,
+        "f1": 0.41975308641975306,
+        "recall": 0.40476190476190477,
+        "specificity": 0.5510204081632653,
+        "false_positives": 22,
+        "false_negatives": 25,
+        "note": "DummyClassifier: no learning from features, only class rates"
+      },
+      "baseline_most_frequent": {
+        "roc_auc": 0.5,
+        "pr_auc": 0.46153846153846156,
+        "f1": 0.0,
+        "recall": 0.0,
+        "specificity": 1.0,
+        "false_positives": 0,
+        "false_negatives": 42,
+        "note": "DummyClassifier: no learning from features, only class rates"
+      }
+    },
+    "subgroup_performance": {},
+    "failure_cases": {
+      "false_negatives": [
+        {
+          "model_probability": 0.2048,
+          "true_label": 1,
+          "features": {
+            "age": 60.0,
+            "sex": 1.0,
+            "cp": 3.0,
+            "trestbps": 140.0,
+            "chol": 185.0,
+            "fbs": 0.0,
+            "restecg": 2.0,
+            "thalach": 155.0,
+            "exang": 0.0,
+            "oldpeak": 3.0,
+            "slope": 2.0,
+            "ca": 0.0,
+            "thal": 3.0
+          }
+        },
+        {
+          "model_probability": 0.1872,
+          "true_label": 1,
+          "features": {
+            "age": 58.0,
+            "sex": 0.0,
+            "cp": 2.0,
+            "trestbps": 136.0,
+            "chol": 319.0,
+            "fbs": 1.0,
+            "restecg": 2.0,
+            "thalach": 152.0,
+            "exang": 0.0,
+            "oldpeak": 0.0,
+            "slope": 1.0,
+            "ca": 2.0,
+            "thal": 3.0
+          }
+        },
+        {
+          "model_probability": 0.2144,
+          "true_label": 1,
+          "features": {
+            "age": 65.0,
+            "sex": 1.0,
+            "cp": 1.0,
+            "trestbps": 138.0,
+            "chol": 282.0,
+            "fbs": 1.0,
+            "restecg": 2.0,
+            "thalach": 174.0,
+            "exang": 0.0,
+            "oldpeak": 1.4,
+            "slope": 2.0,
+            "ca": 1.0,
+            "thal": 3.0
+          }
+        },
+        {
+          "model_probability": 0.2932,
+          "true_label": 1,
+          "features": {
+            "age": 38.0,
+            "sex": 1.0,
+            "cp": 1.0,
+            "trestbps": 120.0,
+            "chol": 231.0,
+            "fbs": 0.0,
+            "restecg": 0.0,
+            "thalach": 182.0,
+            "exang": 1.0,
+            "oldpeak": 3.8,
+            "slope": 2.0,
+            "ca": 0.0,
+            "thal": 7.0
+          }
+        },
+        {
+          "model_probability": 0.4724,
+          "true_label": 1,
+          "features": {
+            "age": 62.0,
+            "sex": 0.0,
+            "cp": 3.0,
+            "trestbps": 130.0,
+            "chol": 263.0,
+            "fbs": 0.0,
+            "restecg": 0.0,
+            "thalach": 97.0,
+            "exang": 0.0,
+            "oldpeak": 1.2,
+            "slope": 2.0,
+            "ca": 1.0,
+            "thal": 7.0
+          }
+        }
+      ],
+      "false_positives": [
+        {
+          "model_probability": 0.7627,
+          "true_label": 0,
+          "features": {
+            "age": 66.0,
+            "sex": 1.0,
+            "cp": 4.0,
+            "trestbps": 160.0,
+            "chol": 228.0,
+            "fbs": 0.0,
+            "restecg": 2.0,
+            "thalach": 138.0,
+            "exang": 0.0,
+            "oldpeak": 2.3,
+            "slope": 1.0,
+            "ca": 0.0,
+            "thal": 6.0
+          }
+        },
+        {
+          "model_probability": 0.5504,
+          "true_label": 0,
+          "features": {
+            "age": 53.0,
+            "sex": 1.0,
+            "cp": 3.0,
+            "trestbps": 130.0,
+            "chol": 246.0,
+            "fbs": 1.0,
+            "restecg": 2.0,
+            "thalach": 173.0,
+            "exang": 0.0,
+            "oldpeak": 0.0,
+            "slope": 1.0,
+            "ca": 3.0,
+            "thal": 3.0
+          }
+        },
+        {
+          "model_probability": 0.7647,
+          "true_label": 0,
+          "features": {
+            "age": 59.0,
+            "sex": 1.0,
+            "cp": 4.0,
+            "trestbps": 135.0,
+            "chol": 234.0,
+            "fbs": 0.0,
+            "restecg": 0.0,
+            "thalach": 161.0,
+            "exang": 0.0,
+            "oldpeak": 0.5,
+            "slope": 2.0,
+            "ca": 0.0,
+            "thal": 7.0
+          }
+        },
+        {
+          "model_probability": 0.9564,
+          "true_label": 0,
+          "features": {
+            "age": 62.0,
+            "sex": 1.0,
+            "cp": 3.0,
+            "trestbps": 130.0,
+            "chol": 231.0,
+            "fbs": 0.0,
+            "restecg": 0.0,
+            "thalach": 146.0,
+            "exang": 0.0,
+            "oldpeak": 1.8,
+            "slope": 2.0,
+            "ca": 3.0,
+            "thal": 7.0
+          }
+        },
+        {
+          "model_probability": 0.6983,
+          "true_label": 0,
+          "features": {
+            "age": 57.0,
+            "sex": 1.0,
+            "cp": 4.0,
+            "trestbps": 132.0,
+            "chol": 207.0,
+            "fbs": 0.0,
+            "restecg": 0.0,
+            "thalach": 168.0,
+            "exang": 1.0,
+            "oldpeak": 0.0,
+            "slope": 1.0,
+            "ca": 0.0,
+            "thal": 7.0
+          }
+        }
+      ],
+      "_note": "Held-out test records the selected model got wrong, with the raw dataset feature values (null = genuinely missing in the source)."
+    },
+    "linear_explanation_baseline": {
+      "note": "train-split means of transformed features, for exact linear SHAP",
+      "feature_names": [
+        "num__age",
+        "num__sex",
+        "num__cp",
+        "num__trestbps",
+        "num__chol",
+        "num__fbs",
+        "num__restecg",
+        "num__thalach",
+        "num__exang",
+        "num__oldpeak",
+        "num__slope",
+        "num__ca",
+        "num__thal",
+        "cat__sex_0.0",
+        "cat__sex_1.0",
+        "cat__cp_1.0",
+        "cat__cp_2.0",
+        "cat__cp_3.0",
+        "cat__cp_4.0",
+        "cat__fbs_0.0",
+        "cat__fbs_1.0",
+        "cat__restecg_0.0",
+        "cat__restecg_1.0",
+        "cat__restecg_2.0",
+        "cat__exang_0.0",
+        "cat__exang_1.0",
+        "cat__slope_1.0",
+        "cat__slope_2.0",
+        "cat__slope_3.0"
+      ],
+      "feature_means": [
+        -3.3516166781136804e-16,
+        -1.047380211910525e-16,
+        -1.7910201623669978e-16,
+        -4.755106162073783e-16,
+        -2.2976903398787145e-16,
+        2.822689671098865e-16,
+        2.4089744873942077e-17,
+        -4.273311264594942e-16,
+        9.531159928385778e-17,
+        6.822086462305488e-17,
+        -2.539897013883023e-16,
+        1.0264326076723146e-16,
+        -3.508723709900259e-16,
+        0.3113207547169811,
+        0.6886792452830188,
+        0.06132075471698113,
+        0.18396226415094338,
+        0.2641509433962264,
+        0.49056603773584906,
+        0.8773584905660378,
+        0.12264150943396226,
+        0.49056603773584906,
+        0.0047169811320754715,
+        0.5047169811320755,
+        0.6792452830188679,
+        0.32075471698113206,
+        0.47641509433962265,
+        0.46226415094339623,
+        0.06132075471698113
+      ]
+    }
+  },
+  "environment": {
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "numpy": "2.5.4",
+    "pandas": "3.1.1"
+  },
+  "intended_use": "Research and educational risk-indicator prototype. Output is a dataset-specific statistical indicator, NOT a validated individual probability of disease and NOT a diagnosis. This project is a prototype and is not medical advice.",
+  "limitations": [
+    "Small sample (303) from a single Cleveland region cohort",
+    "1988 vintage: measurement protocols differ from current practice",
+    "Missing values encoded as '?' in ca/thal/slack; treated as unknown, not zero",
+    "Not a contemporary externally validated cohort; metrics are dataset-specific",
+    "No external validation: all metrics apply to this cohort only.",
+    "Small datasets make confidence intervals wide.",
+    "Baseline comparison uses the same split; a stratified-random baseline already obtains non-trivial scores, so ROC-AUC must be read against it."
+  ]
+}

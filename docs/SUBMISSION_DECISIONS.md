@@ -19,7 +19,8 @@ deterministic run (seed 42):
   split,
 - accuracy, balanced accuracy, precision, recall/sensitivity, specificity, F1, ROC-AUC, PR-AUC, Brier and
   the confusion matrix, with `false_positives` and `false_negatives` as separate top-level numbers,
-- subgroup performance where a demographic column exists (sex for heart/ILPD, age band for pima/ckd),
+- subgroup performance where a demographic column exists (age band for pima/ckd, sex for ILPD;
+  heart and WDBC have no usable demographic attribute in their processed features),
   with an explicit "this is not a fairness claim" note,
 - the actual misclassified test records with raw feature values.
 
