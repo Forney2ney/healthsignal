@@ -112,6 +112,30 @@ npm run dev     # http://localhost:5173
 Demo login (after seeding): `patient.demo@healthsignal.dev` / `healthsignal-demo-pw-2026`
 (also `clinician.demo@`, `researcher.demo@`, `admin.demo@healthsignal.dev`).
 
+### Running on other ports
+
+If `5173`/`8000` are already taken, either script accepts explicit ports:
+
+```powershell
+# one script, both services
+.\run_app.ps1 -BackendPort 8001 -FrontendPort 5174
+# UI: http://127.0.0.1:5174   API: http://127.0.0.1:8001
+```
+
+Or run the two terminals by hand — the Vite proxy target follows `VITE_API_TARGET`:
+
+```powershell
+# terminal 1
+cd backend
+$env:HS_ALLOW_ORIGINS = "http://localhost:5174,http://127.0.0.1:5174"
+..\.venv\Scripts\python -m uvicorn app.main:app --port 8001 --host 127.0.0.1
+
+# terminal 2
+cd frontend
+$env:VITE_API_TARGET = "http://127.0.0.1:8001"
+npm run dev -- --host 127.0.0.1 --port 5174 --strictPort
+```
+
 ## Tests
 
 ```powershell
